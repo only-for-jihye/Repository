@@ -3,7 +3,7 @@ import * as actions from '../actions';
 import { connect } from 'react-redux';
 import { getRandomColor } from '../utils';
 
-// store의 state를 props로 매핑하여 넘김
+// store의 state를 props로 매핑하여 연결
 const mapStateToProps = (state) => ({
     number: state.numberData.number,
     color: state.colorData.color
@@ -20,9 +20,9 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 // store가 가진 state를 props로 엮고
-// reducer에 action을 dispatch하는 함수를 props로 넘기고
-// 위 두가지가 적용된 nonFunction(Counter)가 반환됨
-// Counter를 param으로 갖는 func를 return
+// reducer에 action을 dispatch하는 함수를 props로 넘긴다.
+// 즉, component에 props를 넣어주는 nonFunction가 반환되고, 
+// param으로 Counter component를 가짐
 
 const CounterContainer = connect(
     mapStateToProps,
