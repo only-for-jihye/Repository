@@ -6,7 +6,7 @@ import './CounterList.css';
 
 const CounterList = ({ counters, onIncrement, onDecrement, onSetColor }) => {
 
-    const counterList = counters.map( // map => retrn new array[];
+    const counterList = counters.map( // map => return new array[];
         (counter, i) => (
             <Counter 
                 key={i}
