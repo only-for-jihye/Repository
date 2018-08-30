@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { getRandomColor } from '../utils';
 
 const mapStateToProps = (state) => ({
-    counters: state.counters
+    // counters.state.counters
+    counters: state.get('counters') //get으로 받는부분
 });
 
 const mapDispatchToProps = (dispatch) => ({
