@@ -1,0 +1,37 @@
+# 20220607
+최소 6/17까지 개발 후, 6/23까지 디버깅해서 완료해야함
+
+1. python 2.7 to 3.9
+    1)  __LOG__ -> logger 변경 후 global value 추가
+        import Log -> import logging
+    2)  from common.utilitys import to_str, to_bytes 추가
+    3)  StringIO try/except 변경
+    4)  except : -> except Exception as e
+        logger.exception(str(e))
+
+2. Adaptor 기동 초기화 적용 사항 개발
+    -> AS-IS : python AdaptorMain.py -vSS -eRAN-EMS0205 -dPM
+    -> TO-BE : python AdaptorMain.py -f $ADP_NAME.cfg
+            arg=$ADP_NAME
+            prefix=-f                 .cfg
+    -> 이 부분은 utilitys.py에 argParser()에 있음
+    -> init-container에서 $ADP_NAME은 AdaptorName이 됨
+
+3. init-container 개발
+    - init-container에서 STG zookeeper로 pod명에 따라 config 조회
+    - python에서 zookeeper로 접속하기 위해 사용한 라이브러리 : Kazoo
+    - kazoo 설치 후 python에서 test해본 결과 값 정상적으로 가져옴
+    
+
+# Adaptor 구조 설계
+    - python3 수정 부분
+    5gAdaptorMain -> AdaptorMain.py
+
+    - utilitys.py
+    - AdaptorInit.py
+    - MainLoopFactory.py
+    - WorkerFactory.py
+    - AdaptorFactory.py
+    - LteNmsWorker.py
+    - FtpGetAndSplitPutWorker.py
+    - FtpSplitPutWorker.py
