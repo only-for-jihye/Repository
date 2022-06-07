@@ -1,0 +1,50 @@
+k8s 설정
+
+1. namespcae 설정
+    kubectl create ~
+    *.yaml
+
+2. StorageClass, PersistentVolume, PersistentVolumeClaim 설정
+    *.yaml
+
+3. ConfigMap 설정
+    kubectl create ~
+    *.yaml
+
+4. zookeeper adaptorName zNodes의 seed/adminstate 설정
+    seed = file or String
+    adminstate = String
+
+4. StatefulSet (Deployment) 설정
+    *.yaml
+        - Adaptor         : StatefulSet
+        - SBI             : Deployment
+        - Parser          : Deployment
+        - Router          : Deployment
+        - NBI             : Deployment
+        - Channel Manager : Deployment
+        - OC Manager      : Deployment
+        - zookeeper       : StatefulSet
+        - ooc-biz,web     : Deployment
+
+5. pod 설정
+    * initContainer (init-adaptor)
+        - initializing process
+        - mount rawData (PVC) - All except FM
+    * container (adaptor)
+        - source : OC Gateway or fep
+        - target : 
+                clusterIP pod
+                    - CM : SBI
+                    - PM, CFR : SBI, Parser, Router, NBI
+                clusterIP (Non) pod   :headless service
+                    - FM : Parser
+                
+6. livenessprove
+    * Adaptor, SBI, Parser, Router, NBI, zookeeper : exec
+    * Channel Manager, OC Manager                  : http
+
+7. readnessprove
+    * SBI, Parser, Router, NBI : tcp
+    * OC Manager               : http
+    * zookeeper                : exec
