@@ -22,6 +22,10 @@
     - python에서 zookeeper로 접속하기 위해 사용한 라이브러리 : Kazoo
     - kazoo 설치 후 python에서 test해본 결과 값 정상적으로 가져옴
     
+## 추가 개발 검토
+    - zookeeper에서 adminState 값 읽어서 pod delete ?
+    
+
 
 # Adaptor 구조 설계
     - python3 수정 부분
