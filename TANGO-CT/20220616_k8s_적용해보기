@@ -29,7 +29,7 @@
 
 4. storageclass, pvc, pv는 나중에 ...
 
-5. service 추가 .. 나중에
+5. service 추가 .. 아래에 
 
 6. serviceAccount 추가
     vi oc_sa_js.yaml
