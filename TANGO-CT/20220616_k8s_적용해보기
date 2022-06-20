@@ -61,7 +61,11 @@
 6. pod 로그 보기
     kubectl -n oc-proc-test logs -p oc-adaptor-5g-ss-ran-pm-0
 
+    badrequest가 뜰 때,
+    kubectl logs --namespace=oc-proc-test -p oc-adaptor-5g-ss-ran-pm-0 --previous=false
 
+    동작중인 pod에 들어가서 확인하기
+    kubectl exec --stdin --tty oc-adaptor-5g-ss-ran-pm-0 -n oc-proc-test -- /bin/bash
 
 0. docker image 옮기기
     docker image가 저장된 서버에서
