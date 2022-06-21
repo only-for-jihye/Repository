@@ -1,0 +1,12 @@
+# 2022.06.20 pod 적용 성공
+
+1. pod name을 env로 추가하는 방법
+    https://kubernetes.io/ko/docs/tasks/inject-data-application/environment-variable-expose-pod-information/
+    env :
+        - name :
+          valueFrom:
+            fieldRef:
+                fieldPath : metadata.name
+
+
+

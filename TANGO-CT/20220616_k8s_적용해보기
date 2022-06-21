@@ -29,7 +29,7 @@
 
 4. storageclass, pvc, pv는 나중에 ...
 
-5. service 추가 .. 나중에
+5. service 추가 .. 아래에 
 
 6. serviceAccount 추가
     vi oc_sa_js.yaml
@@ -60,8 +60,13 @@
 
 6. pod 로그 보기
     kubectl -n oc-proc-test logs -p oc-adaptor-5g-ss-ran-pm-0
-    kubectl logs oc-adaptor-5g-ss-ran-pm-0 -n oc-proc-test
 
+    badrequest가 뜰 때,
+    kubectl logs --namespace=oc-proc-test -p oc-adaptor-5g-ss-ran-pm-0 --previous=false
+>>>>>>> ed0da6909c81f62906a353f85b7c120ee09de865
+
+    동작중인 pod에 들어가서 확인하기
+    kubectl exec --stdin --tty oc-adaptor-5g-ss-ran-pm-0 -n oc-proc-test -- /bin/bash
 
 0. docker image 옮기기
     docker image가 저장된 서버에서
