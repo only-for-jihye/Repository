@@ -60,7 +60,7 @@
 
 6. pod 로그 보기
     kubectl -n oc-proc-test logs -p oc-adaptor-5g-ss-ran-pm-0
-
+    kubectl logs oc-adaptor-5g-ss-ran-pm-0 -n oc-proc-test
 
 
 0. docker image 옮기기
