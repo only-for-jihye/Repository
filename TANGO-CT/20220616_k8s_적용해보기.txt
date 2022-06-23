@@ -11,7 +11,7 @@
         apiVersion: v1
         kind: namespace
         metadata:
-            name: oc-proc-test
+            name: ns-tgo-oc
     #}
     kubectl apply -f oc_namespace_js.yaml
 
@@ -20,12 +20,12 @@
 3. configmap 생성
     vi oc_configmap_js.sh
     #{
-        kubectl create configmap adaptor-5g-ss-ran-pm-config --from-file=./adpator-config -n=oc-proc-test
+        kubectl create configmap adaptor-5g-ss-ran-pm-config --from-file=./adpator-config -n=ns-tgo-oc
     #}
     ./oc_configmap_js.sh
 
-    kubectl get configmaps -n oc-proc-test
-    kubectl describe configmaps -n oc-proc-test
+    kubectl get configmaps -n ns-tgo-oc
+    kubectl describe configmaps -n ns-tgo-oc
 
 4. storageclass, pvc, pv는 나중에 ...
 
@@ -41,32 +41,31 @@
 
     kubectl apply -f oc_service_adaptor_js.yaml
 
-    kubectl get service -n oc-proc-test
+    kubectl get service -n ns-tgo-oc
 
 5. StatefulSet adaptor 기동해보기
     vi tgo-oc-adaptor-5g-ss-ran-pm.yaml
 
     kubectl apply -f tgo-oc-adaptor-5g-ss-ran-pm.yaml
 
-    kubectl get pods -n oc-proc-test
+    kubectl get pods -n ns-tgo-oc
         -> READY : 0/1
         -> STATUS : Init:ImagePullBackOff
-        => kubectl logs adaptor-5g-ss-ran-pm-0 -n oc-proc-test 로 POD LOG를 조회하고 싶지만.. 
+        => kubectl logs adaptor-5g-ss-ran-pm-0 -n ns-tgo-oc 로 POD LOG를 조회하고 싶지만.. 
             pod가 아직 Creation이 되지 않았기 때문에 로그가 없음
             따라서 아래와 같이 확인함
-        -> kubectl describe pod adaptor-5g-ss-ran-pm-0 -n oc-proc-test
+        -> kubectl describe pod adaptor-5g-ss-ran-pm-0 -n ns-tgo-oc
     pod 삭제 시
         kubectl delete -f tgo-oc-adaptor-5g-ss-ran-pm.yaml
 
 6. pod 로그 보기
-    kubectl -n oc-proc-test logs -p oc-adaptor-5g-ss-ran-pm-0
+    kubectl -n ns-tgo-oc logs -p oc-adaptor-5g-ss-ran-pm-0
 
     badrequest가 뜰 때,
-    kubectl logs --namespace=oc-proc-test -p oc-adaptor-5g-ss-ran-pm-0 --previous=false
->>>>>>> ed0da6909c81f62906a353f85b7c120ee09de865
+    kubectl logs --namespace=ns-tgo-oc -p oc-adaptor-5g-ss-ran-pm-0 --previous=false
 
     동작중인 pod에 들어가서 확인하기
-    kubectl exec --stdin --tty oc-adaptor-5g-ss-ran-pm-0 -n oc-proc-test -- /bin/bash
+    kubectl exec --stdin --tty oc-adaptor-5g-ss-ran-pm-0 -n ns-tgo-oc -- /bin/bash
 
 0. docker image 옮기기
     docker image가 저장된 서버에서
