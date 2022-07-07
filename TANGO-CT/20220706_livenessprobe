@@ -10,3 +10,9 @@ failureThreshold: 몇 번의 실패 결과를 받아야 정말 실패로 인정�
 각 설정값을 넣지 않으면 그림의 값이 default
 
 https://blog.naver.com/alice_k106/221310477844
+
+* trouble shooting
+starting container process caused "exec: \"/bin/bash\": stat /bin/bash: no such file or directory": unknown
+
+위 에러 발생 시, exec에서 /bin/bash, bash, sh 등으로 변경하면 에러 없음
+
