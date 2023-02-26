@@ -26,7 +26,7 @@ def quickSort(data, start, end):
             temp = data[j]
             data[j] = data[i]
             data[i] = temp
-
+ 
     quickSort(data, start, j - 1)
     quickSort(data, j + 1, end)
 
