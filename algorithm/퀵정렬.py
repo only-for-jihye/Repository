@@ -16,7 +16,7 @@ def quickSort(data, start, end):
     while (i <= j): # 엇갈릴 때까지 반복
         while (data[i] <= data[key]): # 키 값보다 큰 값을 만날 때까지
             i = i + 1
-        while (data[j] >= data[key] & j > start): # 키 값보다 작은 값을 만날 때까지
+        while (data[j] >= data[key] and j > start): # 키 값보다 작은 값을 만날 때까지
             j = j - 1
         if (i > j) : #현재 엇갈린 상태면 키 값과 교체
             temp = data[j]
