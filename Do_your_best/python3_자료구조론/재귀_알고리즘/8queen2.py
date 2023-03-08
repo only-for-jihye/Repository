@@ -21,7 +21,7 @@ def set(i: int) -> None:
         if (    not flag_a[j]               # j행에 퀸이 배치되지 않았다면
             and not flag_b[i + j]           # 대각선 방향(↙↗)으로 퀸이 배치되지 않았다면
             and not flag_c[i - j + 7]):     # 대각선 방향(↘↖)으로 퀸이 배치되지 않았다면
-            pos[i] = j                      # 퀸을 j행에 배치
+            pos[i] = j                      # 퀸을 j행에 배치 
             if i == 7:
                 put()
             else:
