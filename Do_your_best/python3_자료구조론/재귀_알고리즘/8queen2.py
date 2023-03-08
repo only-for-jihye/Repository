@@ -16,7 +16,7 @@ def put() -> None:
     print()
 
 def set(i: int) -> None:
-    """i열의 알맞은 위치에 퀸을 배치"""
+    """i열의 알맞은 위치에 퀸을 배치""" 
     for j in range(8):
         if (    not flag_a[j]               # j행에 퀸이 배치되지 않았다면
             and not flag_b[i + j]           # 대각선 방향(↙↗)으로 퀸이 배치되지 않았다면

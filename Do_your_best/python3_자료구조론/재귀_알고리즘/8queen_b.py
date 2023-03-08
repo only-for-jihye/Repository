@@ -17,4 +17,4 @@ def set(i: int) -> None:
         else:
             set(i + 1)
 
-set(0)
+set(0) 
