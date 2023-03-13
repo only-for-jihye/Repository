@@ -1,0 +1,14 @@
+
+# emptyDir에 sizeLimit을 주지 않을 경우...
+- Worker node의 Disk를 초과 사용할 경우,
+    해당 pod를 다른 worker node로 옮겨 사용
+    대량의 데이터가 저장 될 경우, worker node가 down이 되는 경우가 있음
+
+    따라서 다음과 같이 각 pod별로 emptyDir Sizelimit을 사용
+
+...
+volumes:
+- name : [name]
+  emptyDir:
+    sizeLimit: 1Gi
+
