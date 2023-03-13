@@ -1,0 +1,15 @@
+# Docker Container에 mariadb database dump 방법
+
+
+# 2023.03.13 soo, xwiki backup example
+# /bin/bash
+backupDir=/home/tangosvc/soo
+dat=$(date "+%Y%m%d")
+
+docker exec -it [Container_ID] -u [계정명] -p [패스워드] --database [DB명] > $backupDir/backup_$dat.sql
+
+# docker container ls
+# docker exec -it 0a55b0a46b4d bash
+# mariadb -uxwiki -p
+# use xwiki;
+# show tables;
