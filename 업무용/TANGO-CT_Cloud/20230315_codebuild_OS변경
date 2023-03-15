@@ -11,12 +11,6 @@
 환경 유형 : Linux
 
 <<에러코드>>
-    [INFO] Scanning for projects...
-    [INFO]
-    [INFO] ------------------< com.skt.tango:tgo-oc-parser-itg >-------------------
-    [INFO] Building TANGO Operation Collector Parser Integration Version Project 1.0
-    [INFO] --------------------------------[ jar ]---------------------------------
-    Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/2.5/maven-clean-plugin-2.5.pom
     [INFO] ------------------------------------------------------------------------
     [INFO] BUILD FAILURE
     [INFO] ------------------------------------------------------------------------
@@ -30,24 +24,6 @@
     [ERROR]
     [ERROR] For more information about the errors and possible solutions, please read the following articles:
     [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/PluginResolutionException
-
-    [Container] 2023/03/14 01:51:19 Command did not exit successfully mvn clean package install -P ${ECR_REPO_ENV} -Dmaven.test.skip=true exit status 1
-    [Container] 2023/03/14 01:51:19 Phase complete: BUILD State: FAILED
-    [Container] 2023/03/14 01:51:19 Phase context status code: COMMAND_EXECUTION_ERROR Message: Error while executing command: mvn clean package install -P ${ECR_REPO_ENV} -Dmaven.test.skip=true. Reason: exit status 1
-    [Container] 2023/03/14 01:51:19 Entering phase POST_BUILD
-    [Container] 2023/03/14 01:51:19 Running command echo Build completed on `date`
-    Build completed on Tue Mar 14 01:51:19 UTC 2023
-
-    [Container] 2023/03/14 01:51:19 Running command echo Pushing the Docker image...
-    Pushing the Docker image...
-
-    [Container] 2023/03/14 01:51:19 Running command docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:${ECR_REPO_TAGS}
-    invalid reference format
-
-    [Container] 2023/03/14 01:51:19 Command did not exit successfully docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:${ECR_REPO_TAGS} exit status 1
-    [Container] 2023/03/14 01:51:19 Phase complete: POST_BUILD State: FAILED
-    [Container] 2023/03/14 01:51:19 Phase context status code: COMMAND_EXECUTION_ERROR Message: Error while executing command: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPO_NAME:${ECR_REPO_TAGS}. Reason: exit status 1
-
 
 * 이슈 원인
     - maven 3.8.1 version 이후, http에 대한 외부 연결을 막는 설정이 default로 적용됨
