@@ -17,7 +17,7 @@
     [INFO] Total time:  02:12 min
     [INFO] Finished at: 2023-03-14T01:51:19Z
     [INFO] ------------------------------------------------------------------------
-    [ERROR] Plugin org.apache.maven.plugins:maven-clean-plugin:2.5 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-clean-plugin:jar:2.5: Could not transfer artifact org.apache.maven.plugins:maven-clean-plugin:pom:2.5 from/to maven-default-http-blocker (http://0.0.0.0/): Blocked mirror for repositories: [central (http://90.90.216.163:8082/nexus/repository/maven-tango, default, releases)] -> [Help 1]
+    [ERROR] Plugin org.apache.maven.plugins:maven-clean-plugin:2.5 or one of its dependencies could not be resolved: Failed to read artifact descriptor for org.apache.maven.plugins:maven-clean-plugin:jar:2.5: Could not transfer artifact org.apache.maven.plugins:maven-clean-plugin:pom:2.5 from/to maven-default-http-blocker (http://0.0.0.0/): Blocked mirror for repositories: [삭제] -> [Help 1]
     [ERROR]
     [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
     [ERROR] Re-run Maven using the -X switch to enable full debug logging.
