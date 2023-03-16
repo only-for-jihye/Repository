@@ -52,3 +52,23 @@
 
 * 위와 같은 방법을 사용했더니 maven build 에러 없이 잘 되었다.
 
+* Guide에 따른 수정 적용
+    1) settings.xml
+        <mirrors>
+            <mirror>
+                <id>maven-default-http-blocker</id>
+                <mirrorOf>external:dont-match-anything-mate:*</mirrorOf>
+                <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+                <url>http://0.0.0.0/</url>
+                <blocked>false</blocked>
+            </mirror>
+        </mirrors>
+    
+    2) buildspec.yaml
+    phases:
+        build:
+        commands:
+            - echo repository file copy
+            - cp ./settings.xml /root/.m2/settings.xml
+
+* 동일하게 동작이 잘 된다.
