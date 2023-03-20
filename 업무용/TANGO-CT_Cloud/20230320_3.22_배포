@@ -43,3 +43,72 @@
 
         Channel-monitor, OC-Manager
         - app-boot-dir : 부팅 파일 저장, 1MB 이하 사용으로 10Mi 설정
+
+
+
+3/22 배포 예정 사항 (관리자 : 원종수)
+
+ONP
+ISMS 보안 결함 dbms.properties 암호화 작업 (작업자: 최재호 부장님)
+대상 : channel-monitor, node-manager
+Java Policy 패치 작업 필요 - 55개 대상 서버 Root 권한 신청 완료
+
+삼성 URM 정기 패스워드 변경 작업 (작업자 : 손석기)
+
+tg-p-lora-mon1 서버 iptables 작업 예정 (점검자 : 원종수)
+LoRa S-EMS#51 B장비 및 vIP
+테스트는 A <-> B Active/Standby 전환 때 확인 필요 - 교환팀 권병준M
+
+
+CLOUD
+EKS 리소스 최적화 - 비효율 TOP 20 대상 (작업자 : 원종수)
+CPU Request, Memory Request/Limit 적용 -> CPU Request 변경에 따라 HPA CPU utilization 변경
+CPU Limit은 조정하지 않음 (데이터 처리 속도에 이슈 예상)
+deploy-tgo-oc-parser-5g-elg-pm
+deploy-tgo-oc-parser-5g-elg-spgw-pm
+deploy-tgo-oc-parser-5g-nsn-ran-pm
+deploy-tgo-oc-parser-5g-ss-mecgw-pm
+deploy-tgo-oc-parser-5g-ss-mme-cfr
+deploy-tgo-oc-parser-5g-ss-mme-pm
+deploy-tgo-oc-parser-5g-ss-ran-pm
+deploy-tgo-oc-parser-5g-ss-spgw-pm
+sts-tgo-oc-adaptor-5g-ss-ran-cfr
+sts-tgo-oc-adaptor-5g-ss-spgw-pm
+sts-tgo-oc-adaptor-5g-ss-usm-pm
+3/20 PRD Argocd 적용 완료 - Sync 하면 반영됨
+
+emptyDir Size Limit 적용 (작업자 : 원종수)
+작업 결정 시, PRD Argocd 반영 필요
+T-DE 리소스 최적화 페이지에 반영 완료 (3/20)
+산출 기준 :
+Adaptor
+adaptor-config : cfg 파일 저장, 총 10Mi 이하 사용으로 10Mi 설정
+adaptor-tmp : AI Layer S3 저장 Sidecar container 기동 시, 사용
+fm은 미사용으로 10Mi 설정
+pm, cfr은 사용으로 각 raw data 사이즈 (datadoge mphmeral storage usage) 기준, 최대 사용치 X 1.5로 설정
+sts-tgo-oc-adaptor-5g-ss-ran-cfr은 6Gi로 최대, ELG/NSN PM은 2Gi, SS PM은 3Gi
+기타 PM은 512Mi 설정
+adaptor-collector : Sidecar container 기동 시 사용, raw 파일 기준 256Mi 또는 512Mi로 설정
+adaptor-log : log 파일 저장, 에러 로그 출력 시 파일당 100Mi 저장되는 경우가 있어 총 용량 256Mi로 설정
+Parser
+parser-bigq : PM/CFR은 2Gi 통일 -> 데이터 사이즈 증가 및 BULK 처리 등, 데이터가 몰려 처리될 때 대비하여 2Gi 설정
+parser-config : cfg 파일 저장, 총 10Mi 이하 사용으로 10Mi 설정
+parser-log : log 파일 저장, 에러 로그 출력 시 파일당 100Mi 저장되는 경우가 있어 총 용량 256Mi로 설정
+parser-rule : parsing rule 파일 저장, 128Mi 설정
+Channel-monitor, OC-Manager
+app-boot-dir : 부팅 파일 저장, 1MB 이하 사용으로 10Mi 설정
+
+CodeBuild OS 변경 적용 (작업자 : 원종수)
+Ubuntu -> Amazon linux2 변경 적용
+Channel-monitor PI TCA SMS 알람 조건 변경 (작업자 : 원종수)
+AS-IS
+FM : 30% 이상 감소, 100% 이상 증가, 미수집
+PM : 30% 이상 감소, 100% 이상 증가, 미수집
+CM 및 기타 : 미수집
+TO-BE
+FM : 미수집, 1000% 이상 증가
+PM : 30% 이상 감소, 100% 이상 증가
+
+Adaptor Seed 기능 개선 (작업자 : 최재호 부장님)
+5G 삼성 Access 비정상 Size 통계 파일에 대한 수집 개선 1차 적용
+Adaptor zookeeper seed 처리 시, 부하로 인한 zookeeper 연결 중단 시, 예외 처리 기능
