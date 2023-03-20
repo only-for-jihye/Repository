@@ -1,0 +1,45 @@
+# 20230320_3.22 배포 예정 사항
+
+1. Channel-monitor PI TCA 알람 변경 (commit 및 build 필요 => 3/20)
+    - xwiki 반영 필요
+    - FM 30% 이상 감소 시, 알람 발생 -> 제외, 미수집만 받기
+    - FM 100% 이상 증가 시, 알람 발생 -> 1000%로 변경
+
+2. Resource 최적화 작업 (argocd 반영 완료 => 3/20)
+    - 권고 사항에 따른 Resource 최적화 작업
+    - deploy-tgo-oc-parser-5g-elg-pm
+    - deploy-tgo-oc-parser-5g-elg-spgw-pm
+    - deploy-tgo-oc-parser-5g-nsn-ran-pm
+    - deploy-tgo-oc-parser-5g-ss-mecgw-pm
+    - deploy-tgo-oc-parser-5g-ss-mme-cfr
+    - deploy-tgo-oc-parser-5g-ss-mme-pm
+    - deploy-tgo-oc-parser-5g-ss-ran-pm
+    - deploy-tgo-oc-parser-5g-ss-spgw-pm
+    - sts-tgo-oc-adaptor-5g-ss-ran-cfr
+    - sts-tgo-oc-adaptor-5g-ss-spgw-pm
+    - sts-tgo-oc-adaptor-5g-ss-usm-pm
+
+3. CodeBuild OS 변경 적용 (변경 필요 => 3/20)
+    - Ubuntu -> amazonlinux2 적용
+
+4. EmptyDir Size Limit 적용 (deploy prd file에 values 등 추가 필요, argocd 반영 필요 => 3/20)
+    - TDE 페이지 참조
+    - 기준 :
+        Adaptor
+        - adaptor-config : cfg 파일 저장, 총 10Mi 이하 사용으로 10Mi 설정
+        - adaptor-log : log 파일 저장, 에러 로그 출력 시 파일당 100Mi 저장되는 경우가 있어 총 용량 256Mi로 설정
+        - adaptor-collector : Sidecar container 기동 시 사용, raw 파일 기준 256Mi 또는 512Mi로 설정
+        - adaptor-tmp : AI Layer S3 저장 Sidecar container 기동 시, 사용 
+            - fm은 미사용으로 10Mi 설정
+            - pm, cfr은 사용으로 각 raw data 사이즈 (datadoge mphmeral storage usage) 기준, 최대 사용치 X 1.5로 설정
+                - sts-tgo-oc-adaptor-5g-ss-ran-cfr은 6Gi로 최대, ELG/NSN PM은 2Gi, SS PM은 3Gi
+                - 기타 PM은 512Mi 설정
+
+        Parser
+        - parser-bigq : PM/CFR은 2Gi 통일 -> 데이터 사이즈 증가 및 BULK 처리 등, 데이터가 몰려 처리될 때 대비하여 2Gi 설정
+        - parser-config : cfg 파일 저장, 총 10Mi 이하 사용으로 10Mi 설정
+        - parser-log : log 파일 저장, 에러 로그 출력 시 파일당 100Mi 저장되는 경우가 있어 총 용량 256Mi로 설정
+        - parser-rule : parsing rule 파일 저장, 128Mi 설정
+
+        Channel-monitor, OC-Manager
+        - app-boot-dir : 부팅 파일 저장, 1MB 이하 사용으로 10Mi 설정

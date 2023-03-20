@@ -12,3 +12,15 @@ volumes:
   emptyDir:
     sizeLimit: 1Gi
 
+
+# emptyDir에 Size Limit을 주었는데, 초과가 되면 어떻게 될까?
+1. kubectl get event에 아래와 같이 나타남
+  - Usage of EmptyDir volume "adaptor-tmp" exceeds the limit "100Mi"
+  - Stopping container adaptor-container
+  - Successfully assigned ~ 다시 기동
+  - init-container부터 초기 시작 => Reset
+
+2. slack이나 다른 tool을 사용해 alarm을 받을 때는
+  kubectl get event에 올라오는 알람을 수집하면 됨
+
+
