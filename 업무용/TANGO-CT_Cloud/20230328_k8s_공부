@@ -3,11 +3,14 @@
 k8s 교육은 아니고... 정리해서 같이 공부하기...
 reference : https://kubernetes.io/ko/, https://kubernetes.io/ko/docs/home/
 
+prefix...
+ - 왜 클라우드인가? container ? docker ? k8s ?
+
 0. Docker
 
 1. container
-    - manifest
-    - k8s
+    - manifest : *.yaml (base 파일들)
+    - k8s 
     - helmChart
 
 2. pod
@@ -26,7 +29,7 @@ reference : https://kubernetes.io/ko/, https://kubernetes.io/ko/docs/home/
         - Cronjob
     - init-container
     - container
-    - sideCar container
+    - MultiContainer == sideCar container
     * Resource ?
     * LifeCycle
     - Probe
@@ -45,7 +48,7 @@ reference : https://kubernetes.io/ko/, https://kubernetes.io/ko/docs/home/
     - External Name
 
 4. storage
-    - PV
+    - PV (EFS)
         - EBS, EFS
     - PVC
     - StorageClass
