@@ -10,6 +10,7 @@ nfs_permission
 security_inode_permission
 ...
 
+참고자료 ; # https://santander.co.kr/49
 
 * Taint : Kernel 패닉 등이 일어날 때 발생...
 
