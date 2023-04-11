@@ -1,0 +1,22 @@
+# 2023.04.11 alb
+
+health checks
+    / -> /cluster
+
+* ALB 관련 확인 사항
+    - oc-manager-client-ex에 대해 alb 설정 사항을 확인해보면, 먼저 AWS Console의 EC2 인스턴스, 로드밸런서의 alb-tgo-stg-oc-mgmt에서 Listeners HTTP:80에서 Target groups 에러 발생하고 있음
+    - 즉, alb에서 oc-manager-client-ex에서 healthy check 오류 발생
+    - oc-manager에서는 POST로 데이터를 가져오고 있음
+    - Health checks에서 unhealthy 상태로 alb 관련 mapping이 제대로 동작하지 않는 것으로 보임
+    - Health checks 설정 사항에서 HTTP Method를 POST로 변경하고자 찾아보았으나
+    - Stack overflow에서 POST는 지원하지 않는 것으로 보임
+    - 추가 확인 더 필요...
+
+
+* ALB에서 healthy check
+    - GetMapping /health 찾아 정상 처리 완료
+
+
+
+
+
