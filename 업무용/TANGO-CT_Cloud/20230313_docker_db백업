@@ -20,3 +20,52 @@ cat $filename.sql | docker exec -i $containerID mariadb -u $userName -p$passwd $
 # 즉시 반영되지는 않고, 좀 걸림
 # 바로 반영을 확인하려면 xwiki container를 restart 해야됌
 
+
+
+# xwiki 첨부파일 백업
+첨부파일 (attachment) 백업
+첨부파일은 xwiki에 특정 디렉토리에 알 수 없는 형태의 파일로 저장됨
+
+
+
+위는 xwiki container를 접속해서 확인한 결과…. 조회도 안되고 … 파일 보기도 안됨
+
+ 
+
+방법을 고안해봤는데 맞는지는 모르겠음
+
+om-spk1 (현재 서버)의 xwiki container의 /usr/local/xwiki/data/store/file에 있는 xwiki 디렉토리를 통째로 복사하면 압축해서
+
+om-spk3 (예비 서버)의 xwiki container에 동일한 디렉토리에 복사해서 압축한다면 ?
+
+ 
+
+결과는 성공입니다.
+
+ 
+
+위 방법이 맞는지는 모르겠으나, 굉장히 손이 많이 갑니다.
+
+Docker container에 접속해서 위 디렉토리를 찾아 tar 압축
+
+-> 위 디렉토리는 각 서버의 로컬 위치인 /home/tangosvc/docker-app/xwiki/usr-local-wiki에 있음
+
+-> om-spk1에서 이 위치의 파일을 /home/tangosvc/. 로 mv
+
+-> xwiki.tar 파일을 chown tangosvc:tangosvc로 변경 (root 상태 파일은 scp로 전송 불가)
+
+-> scp xwiki.tar tangosvc@tg-p-om-spk3:/home/tangosvc/. 전송
+
+-> om-spk3 서버에서 이 파일을 다시 chown root:root xwiki.tar 변경
+
+-> 동일한 위치 /home/tangosvc/docker-app/xwiki/usr-local-wiki/data/store/file/. 에 mv하여 tar 압축 해제
+
+           위 방법으로 하면, om-spk3 (예비서버)에서 파일 다운로드가 됩니다.
+
+ 
+
+더 찾아봐야겠지만, xwiki.properties에서 filesystem store를 저장하는 부분이 있어요. 그런데 지금 주석으로 막혀있습니다.
+
+Om-spk1에서 테스트를 하면 좋을 것 같은데, 파일이 날아갈까봐 망설여지네요.
+
+일단 휴가 다녀오고 차주에 om-spk3에서 filesystem store를 지정해서 다시 배포하고, 비교를 해봐야겠습니다.
