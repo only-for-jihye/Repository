@@ -13,3 +13,10 @@ docker exec -it [Container_ID] -u [계정명] -p [패스워드] --database [DB�
 # mariadb -uxwiki -p
 # use xwiki;
 # show tables;
+
+
+# 복구
+cat $filename.sql | docker exec -i $containerID mariadb -u $userName -p$passwd $dbName
+# 즉시 반영되지는 않고, 좀 걸림
+# 바로 반영을 확인하려면 xwiki container를 restart 해야됌
+
