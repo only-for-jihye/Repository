@@ -8,3 +8,10 @@
 
 3. aws ecr list-images --repository-name {} --region {}
 
+
+
+docker 데몬은 기동되어 있으나 로그인 안될 때, got permission denied while trying to connect to the docker daemon socket
+ - 해당 계정에 docker group 추가해야함
+ sudo usermod -a -G docker $USER
+
+
