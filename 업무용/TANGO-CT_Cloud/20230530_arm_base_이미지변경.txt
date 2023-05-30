@@ -1,0 +1,52 @@
+# 2023.05.30 arm base 이미지 변경 과정
+
+...
+base 이미지를 arm64 (aarch64)로 변경 업무 ..
+
+AWS codebuild 이미지를 aarch64-standard 2.0으로 변경
+Dockerfile FROM 이미지를 공통의 amazonlinux2-arm으로 변경
+
+...빌드 과정 중 에러 발생
+arm64 이미지를 linux/amd64로 build시 에러 발생
+ -> docker buildx build --platform linux/amd64로 변경하여 사용 가능
+
+하지만 linux/arm64 이미지를 linux/amd64의 EC2에는 올릴 수 없음
+ -> worker nodegroup을 arm64 전용으로 생성해야 가능
+
+원하는 pod를 nodegroup을 선택하여 올리는 방법
+ -> node selector
+ -> affinity
+    : node-selector에 비해 affinity가 유용성이 더 높음
+    tolerations:
+    - key: dedicated
+      value: onpremOutbound-arm
+      effect: NoSchedule
+      operator: Equal
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpression:
+            - key: kubernetes.io/arch
+              operator: In
+              values:
+              - "arm64"
+ -> 즉, 원하는 nodegroup의 label을 확인
+ -> kubectl describe nodes {nodegroupName} -n {nameSpace}
+ -> label을 참고하여 맞춰주면 됨
+
+
+그리고.. aarch64 (arm64) OS의 경우. jdk를 지원하는 버전이 별도로 존재함
+ -> 즉, OS마다 지원하는 버전이 상이함
+ -> 지금 문제는 amazonlinux2에서 사용하던 jdk를 arm OS에서도 설치해서 사용했음
+ -> arm nodegroup으로 띄우고, 테스트 해봤는데 java가 실행이 안됨
+ -> 해당 오류는 다음과 같음
+    : /usr/java/jdk/bin/java: cannot execute binary file
+ -> stack over flow 및 구글링 결과, jdk버전이 aarch64를 지원하지 않을 때 발생함
+ -> lscpu로 확인해보니 architecture는 aarch64로 잘 표시되어 있음
+ -> 이는 x86_64 등, OS bit에 따라서도 맞춰줘야 하기 때문 ...
+
+공통에 현재 arm 이미지에 설치되어 있는 jdk가 aarch64를 지원하는게 맞는지 확인이 필요함
+... 만약 정확하게 설치가 된거라면 ..?
+-> 다시 무한 루프~ 시작
+
