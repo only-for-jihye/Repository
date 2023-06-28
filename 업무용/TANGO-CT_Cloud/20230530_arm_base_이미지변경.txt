@@ -54,3 +54,7 @@ arm64 이미지를 linux/amd64로 build시 에러 발생
 -> 정상 성공 확인
 -> jdk를 aarch64 지원 version으로 설치했더니 정상적으로 기동됨
 
+
+
+docker buildx ls 할 때, arm64 표기 안될 시
+- docker run --privileged --rm tonistiigi/binfmt --install all
