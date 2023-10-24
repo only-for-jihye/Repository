@@ -33,12 +33,18 @@ if __name__ == '__main__':
     #     print('no')
     # print(st)
     
-    name = 'ALARM.22'
-    arg = ' '
-    ver = name.split(arg)
-    print(ver)
+    # name = 'ALARM.22'
+    # arg = ' '
+    # ver = name.split(arg)
+    # print(ver)
 
-    if len(ver) > 1:
-        print(ver)
+    # if len(ver) > 1:
+    #     print(ver)
+    # else:
+    #     print('no')
+
+    count = 1
+    if (count % 5000 == 0):
+        print('y')
     else:
         print('no')
