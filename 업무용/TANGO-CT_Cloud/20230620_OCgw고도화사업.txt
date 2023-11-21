@@ -418,4 +418,5 @@ UI
 * 클라우드 CM Adaptor를 올리는데 필요한 자원/용량 (11/24까지 김영궁M님께 전달드리기)
     - efs 용량 및 Workload 수량, Resource 등
 
+차주 DVT : 수요일 14시 **
 
