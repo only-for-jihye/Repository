@@ -478,5 +478,25 @@ DVT 준비할 것 - 시나리오, 순서
 
 
 
+    Triggered: [PRD][K8S]Pod OOM 발생
+Pod OOM 발생
+kubernetes.containers.state.terminated over pod_name:sts-tgo-oc-adaptor-5g-nsn-ran-fm-3,reason:oomkilled was > 0.0 on average during the last 5m.
+Metric value: 1.0 (7kB)
+Tags
+pod_name:sts-tgo-oc-adaptor-5g-nsn-ran-fm-3
+
+
+msk 보안패치 작업 : 매월 6일 00~03시
+
+
+
+12/12
+삼성 5G RAN-EMS PM 데이터가 각 수집주기별로 파일 수가 다르게 입력됨
+    -> 무작위로 파일이 빠지는 것인지, 특정 파일만 간헐적으로 누락되는 것인지 확인이 필요함
+    -> 데이터 지연 수집 문제
+
+    : 이슈 파악하여 Access솔루션팀으로 전달 필요
+
     
+
 
