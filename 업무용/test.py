@@ -43,8 +43,19 @@ if __name__ == '__main__':
     # else:
     #     print('no')
 
-    count = 1
-    if (count % 5000 == 0):
-        print('y')
-    else:
-        print('no')
+    # count = 1
+    # if (count % 5000 == 0):
+    #     print('y')
+    # else:
+    #     print('no')
+
+    file = 'ALARM.18'
+    aa = re.search(r'(\d{2})', file)
+    print(aa)
+
+    if re.search(r'(\d{2})', file):
+        print('yes')
+    else: print('no')
+    
+
+    
