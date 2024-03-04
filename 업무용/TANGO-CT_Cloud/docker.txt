@@ -32,3 +32,8 @@ docker 명령어 정리
     exec는 컨테이너 내부에서 shell 실행
 
 
+
+
+** docker registry 확인
+curl -XGET xx.xx.xxx.xx:5000/v2/_catalog
+
