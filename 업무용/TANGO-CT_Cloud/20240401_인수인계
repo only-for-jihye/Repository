@@ -98,3 +98,56 @@
         * As Soon As Possible (가능한한 빨리)
         * Follow Up (계속 대응해달라)
 
+
+
+* OC 서버 목록
+
+0. FEP/OCGW
+    FEP
+    - ltecdr-c1 : ELG RAN-EMS (3G Mod/LTE/5G), ELG Core (AMME, APGW, ASGW)   
+    - ltecdr-c2 : NSN RAN-EMS (3G Mod/LTE/5G)
+    - ltefep01, 16 : 삼성 LTE/5G CN-EMS (Core)
+    - ltefep03 ~ 20, 22 : 삼성 LTE RAN-EMS 
+
+    OCGW
+    - tg-p-ocgw-503/504 : 삼성 5G RAN-EMS#208 (USM#7) CM/FM/PM 모두 수용
+    - tp-p-ocgw-505/506 : 삼성/ELG 5G CN-EMS (Core), SMSS
+    - tg-p-ocgw-507/508 : 삼성 5G RAN-EMS#205 (USM#4)의 PM만 수용
+
+
+1. Adaptor c(O)
+    - tg-p-ocadp-101 ~ 104, 001 ~ 020, 501 ~ 502
+
+    ** arm-s, wfep, sdn-app-01
+    OC 담당 하던 이전 회사 ()
+    arm-s : 인증군 장비들의 fep/ocgw
+    wfep : 3G Access/Core (URM, MSC, MGW, SGSN) fep/ocgw
+    sdn-app-01 : IP 장비들의 fep/ocgw
+
+    tg-p-ocadp-015 setup prod_config
+
+
+
+
+2. Parser 
+    - tg-p-ocpar-101 ~ 106, 001 ~ 026
+
+3. NBI
+    - tg-p-ocnbi-101 ~ 104, 001 ~ 008
+
+4. Zookeeper
+    - tg-p-oczkp-01 ~ 03
+
+5. WAS
+    - tg-p-oc-was-01 ~ 02
+    - tg-p-oc-ui-was-01 ~ 02
+
+
+
+
+
+Cloud
+* Pod
+* Service
+* Stroage
+* 
