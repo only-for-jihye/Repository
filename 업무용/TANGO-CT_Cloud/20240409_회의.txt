@@ -1,0 +1,13 @@
+# 2024.04.09 회의
+
+1. OCgateway 
+    - Cluster를 대체할만한게 있는지 (NAS, Chef 등)
+    - 공통의 Stroage
+
+2. 신규 장비 연동에 대한 자동화 Framework 개발
+    - k8s 기반에서 AI로 신규 연동 장비 연동 Adaptor / Parser를 선택해서 띄우는것?
+    - 기준은 TANGO 연동 규격으로 ...
+
+3. 수집상태감시 고도화
+
+
