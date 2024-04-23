@@ -1,0 +1,8 @@
+# 2024.04.23 최재호 부장님 인수인계
+
+CodeCommit (Cloud)
+    -> 1.3 버전 업 (PRD는 미적용, CodeCommit만 반영한 상태)
+        : Zookeeper Empheral Node 생성 문제... 30 -> 60초로 변경
+    
+    
+

@@ -151,3 +151,50 @@ Cloud
 * Service
 * Stroage
 * 
+
+
+# 2024.04.23 
+1. 장애 대응
+    - 데이터 누락 -> 장애 상황
+    
+    - OC에서 장애 상황 발생 Case
+        1. Infra 장애 <OC 대응>  주로 Infra팀에서 대응, 수집 데이터에 대한 책임은 OC
+            - On-Premise 서버에 대한 대응은 Infra팀에서 ...
+                -> OS / Network / Disk
+                * OS : kernel 이슈... 
+                    ** T-Core에서 알람 발생
+                        -> CR : Critical
+                        -> MJ : Major
+                        -> MN : Minor
+                * Network : 90/100/110 (내부망), 60/70/172 (외부망) 스위치 이슈..
+                * Disk 
+                    - H/W Fault .. 물리장비 이슈...
+            -> T-Core 알람을 받았을 때, [공통] 점검 요소
+                1. 접속이 되는지 확인 (SSH)
+                2. 접속이 되면 수집 점검 (FM/PM/CM/CFR) Noti, ALARM
+                3. Adaptor 점검 (클라우드, 온프레미스)
+            -> 점검 결과를 허남웅 매니저님께 전달
+            ** 주로 발생하는 메시지 패턴 : kernel bug, CPU soft lockup 등 ..
+            -> 석기한테 대응 어떻게할건지 물어보기
+
+            ******- OCGW 서버 장애
+                OCGW에 HA 구성 (High Availablity) 고가용성
+                    -> 이중화 구성 -> Master/Slave -> Master가 Down 되어도 Slave가 Master를 대신하여 동작
+                    *OC 이중화 기술 구성
+                    1. DRBD (Block Copy 기술)
+                    2. Corosync (멤버간의 통신, 상태 등을 담당) M:N 
+                    3. Pacemaker (Master 서버에서 동작해야 하는 환경 설정 등을 관리)
+                    -----> pcs 데몬을 쓴다.
+                ** 메시지 패턴 : DRBD Error, DRBD Master/Slave 전환 알람
+                -> 최소 과장~ 전달
+
+            ... tg-p-ocadp-xxx 서버들, Hang Alarm 
+                -> Adaptor 동작 점검 (현재 시간 기준 대비, Adaptor log가 몇시에 찍혔는지 ...)
+                -> 촉이 안좋아 과장~ 전달
+
+
+        2. Applicaiton 장애 <OC 대응>
+
+
+
+2. 메일 관리
