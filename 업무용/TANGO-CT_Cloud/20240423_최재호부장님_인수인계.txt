@@ -6,3 +6,11 @@ CodeCommit (Cloud)
     
     
 
+# 2024.04.24 최태원 이사님 성능 인수인계
+찾아봐야 할 것들 ..
+ - Spark SQL의 Data Frame (RDB Table Data)
+    -> parquet 파일 자동 생성 ?
+ - Hadoop MapReduce
+ - Spark executor
+
+
