@@ -3,7 +3,16 @@
 CodeCommit (Cloud)
     -> 1.3 버전 업 (PRD는 미적용, CodeCommit만 반영한 상태)
         : Zookeeper Empheral Node 생성 문제... 30 -> 60초로 변경
-    
+
+영현이에게 추가 설명해줘야 할 것
+    -> statefulset / deployment를 나눠서 사용하는 이유?
+    -> zookeeper의 용도 : Adaptor, Parser (그림을 보면서 ...)
+        -> adminState의 용도 - InitContainer
+    -> OC-Manager Master/Slave 노드 
+    -> CM은 왜 Parser와 Router, NBI가 다 살아있는가?
+    -> zookeeper 내 파싱룰 파일 
+    -> 매니저의 Rule 동기화 : STG <-> PRD   -- S3 사용
+
     
 
 # 2024.04.24 최태원 이사님 성능 인수인계
