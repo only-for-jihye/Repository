@@ -23,3 +23,79 @@ CodeCommit (Cloud)
  - Spark executor
 
 
+# 2024.04.30 인수인계 to 영현
+----> T-Core 점검
+----> 5/2 ocgw 대개체 작업 관련 인수 인계
+
+ltefep06 /data01
+
+
+# 2024.5.07
+--> CI/CD
+   CI (Continuous Integration)
+    -> Code 개발
+
+   CD (Continuous Deplyment)
+    -> Code 배포
+
+    DevOps 등장
+
+
+    --> TANGO Legacy (ON-PREMISE)
+        -> CI (SVN)
+        -> CD (TPMS, Jenkins)
+    
+    --> TANGO (Cloud)
+        -> CI (CodeCommit) - Git => AWS 
+            -> Repository에 저장만 하는 것이 아니라, Build까지 한다.
+            -> Java 소스 파일 -> jar, war 
+            -> Container Image를 Build 
+
+        -> CD (ArgoCD)
+
+    개발순서
+    branch 
+
+
+--> OC Manager 역할 
+
+ ---> 5/8 ~ 해야할 것
+DockerFile로 Docker Image 만들어보기
+1. emsgs2 서버의 centos 이미지 사용
+-> 계정 만들기
+-> 환경설정 잡기
+2. emsgs1 서버에 test 파일 몇개 만들어서 tar 만들고
+3. centos 이미지에 tar 파일 추가해서 압축까지 풀어보기
+4. bash 파일 만들어서 어떤 파일에 echo "Hello" 추가하기
+
+--->> 무한 루프로 숫자 찍는 docker container까지 띄우기ㅏ
+    대신에 4번까지 한 이미지에 추가 빌드
+
+
+
+# 2024.05.08 인수인계
+정기 작업
+1. 매달 삼성 URM 패스워드 변경 작업 (5/22)
+    ->  
+2. 2개월 1회 (홀수달, 첫번째 정기배포 5/8)
+    - IMS 패스워드 변경 작업
+    - VASNMS 패스워드 변경 작업
+    - SDN SYSLOG 패스워드 변경 작업
+
+
+# 2024.05.09 to-do list
+1. T-Core OCGW 알람 적용 (신규 OCGW 대상)
+2. T-Core 서버 메모리 점검 후 전체 재기동 (클렌징)
+    - ocadp-003
+    - wfep-08
+    - ocadp-009
+3. 수집상태 감시 업데이트
+
+
+
+
+# 코딩 스타일 PEP8
+
+
+
+
