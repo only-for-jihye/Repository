@@ -99,3 +99,25 @@ DockerFile로 Docker Image 만들어보기
 
 
 
+# 2024.05.16
+디버깅 방법
+oc3 문서 -> 개발인수인계 디렉토리에 txt 파일 위치
+디버깅 모드 -> break point 지정
+실행할 때도 디버깅 모드로 실행해야 함
+    - Step Into
+    - Step Over 
+    - Step Return 
+디버깅 모드 활용해볼 것
+
+# 2024.05.21
+5GPON HFR : EtlDboWorker -> DB방식
+5GPON SOLID/SUNWV/CWVR : TL1EventCollWorker, TL1CmdCollWorker => 각 벤더별로 override해서 사용
+NOKIA NFM-T : RestApiCollWorker, KafkaCollWorker
+HUAWEI OTDR : SnmpAsyncCollWorker
+    SDN/IBN DB -> ETL -> TIMP OR DB -> Collect SNMP 장비 접속 정보(json) -> SNMP GET 데이터 수집 -> TANGO-EC
+
+libs/tl1, libs/http, libs/snmp
+
+
+
+
