@@ -1,0 +1,79 @@
+
+1. EC2
+    EC2 is one of the most popular of AWS's offering
+    EC2 = Elastic Compute Cloud = Infrastructure as a Service
+    It mainly consists in the capability of :
+        Renting virtual machines (EC2)
+        Storing data on virtual drives (EBS)
+        Distributing load across machines (ELB)
+        Scaling the services using an auto-scaling group (ASG)
+    Knowing EC2 is fundamental to understand how the Cloud works
+
+
+2. EC2 sizing & configuration options
+    Operating System (OS) : Linux, Windows or MAC OS
+    How much compute power & cores (CPU)
+    How much random-access memory (RAM)
+    How much storage space:
+        Network-attached (EBS & EFS)
+        hardware (EC2 Instance Store)
+    Network card : speed of the card, Public IP address
+    Firewall rules : security group**
+    Bootstrap script (configure at first launch) : EC2 User Data 
+        -> EC2 User Data
+            It is possible to bootstrap our instances using an EC2 User data script 
+            bootstrapping means launching commands when a machine starts 
+            That script is only run once at the instance first start 
+            EC2 user data is used to automate boot tasks such as :
+                Installing updates
+                Installing sofrware 
+                Downloading common files from the internet 
+                Anything you can thing of ..
+            The EC2 User Data Script runs with the root user (sudo ~)
+
+3. EC2 Instance Types - Overview
+    You can use different types of EC2 instances that are optimised for different use cases (https://aws.amazon.com/ec2/instance-types)
+    AWS has the following naming convention :
+        m5.2xlarge
+        -> m : instance class (m? : usually instance)
+        -> 5 : generation (AWS improves them over time)
+        -> 2xlarge : size within the instance class (more cpu, memory) small, large, xlarge, 2xlarge ~
+
+    EC2 Instance Types - General Purpose
+        Great for a diversity of workloads such as web servers or code repositories
+        Balance between : 
+            Compute
+            Memory
+            Networking
+        Mac, T4g, T3, T3a, T2, M6g, M5, M5a, M5n, M5zn, M4, A1 ~
+
+    EC2 Instance Types - Compute Optimized
+        Great for compute-intensive tasks that require high performance processors :
+            Batch processing workloads 
+            Media transcoding
+            High performance web servers 
+            High performance computing (HPC)
+            Scientific modeling & machine learning
+            Dedicatged gaming servers 
+        C6g, C6gn, C5, C5a, C5n, C4
+    
+    EC2 Instance Types - Memory Optimized
+        Fast performance for workloads that process large data sets in memory 
+        Use cases :
+            High performance, relational/non-relational databases 
+            Distributed web scale cache stores 
+            In-memory databases optimized for BI (Business Intelligence)
+            Applications performing real-time processing of big unstructured data
+        R6g, R5, R5a, R5n, R4, X1e, X1, High Memory, z1d    (R- RAM)
+    
+    EC2 Instance Types - Storage Purpose
+        Great for storage-intensive tasks that require high, sequential read and write access to large data sets on local storage 
+        Use cases :
+            High frequency online transaction processing (OLTP) systems 
+            Relational & NoSQL databases 
+            Cache for in-memory databases (for example, Redis)
+            Data warehousing application 
+            Distributed file systems 
+        I3, I3en, D2, D3, D3en, H1
+
+
