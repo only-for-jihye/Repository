@@ -49,13 +49,19 @@ if __name__ == '__main__':
     # else:
     #     print('no')
 
-    file = 'ALARM.18'
-    aa = re.search(r'(\d{2})', file)
-    print(aa)
+    # file = 'ALARM.18'
+    # aa = re.search(r'(\d{2})', file)
+    # print(aa)
 
-    if re.search(r'(\d{2})', file):
-        print('yes')
-    else: print('no')
+    # if re.search(r'(\d{2})', file):
+    #     print('yes')
+    # else: print('no')
     
+    a = 0   # -> false
+    b = 1   # -> True
+    c = 2   # -> True
 
+    if a: print('a')
+    if b: print('b')
+    if c: print('c')
     
