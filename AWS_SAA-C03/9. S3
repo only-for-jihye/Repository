@@ -1,0 +1,386 @@
+
+1. S3
+    Section introduction
+        Amazon S3 is one of the main building blocks of AWS 
+        It's advertised as "infinitely scaling" stroage 
+        Many websites use Amazon S3 as a backbone 
+        Many AWS services use Amazon S3 as an itegration as well 
+        We'll have a step-by-step approach to S3 
+    
+    Use cases 
+        Backup and storage 
+        Disaster Recovery 
+        Archieve 
+        Hybrid Cloud storage 
+        Application hosting 
+        Media hosting 
+        Data lakes & big data analytics 
+        Software delivery 
+        Static website 
+    
+    Buckets 
+        Amazon S3 allows people to store objects (files) in "buckets" (directories)
+        Buckets must have a globally unique name (across all regions all accounts)
+        Buckets are defined at the region level 
+        S3 looks like a global service but buckets are created in a region 
+        Naming convention 
+            No uppercase, No underscore 
+            3-63 characters long 
+            Not an IP 
+            Must start with lowercase letter or number 
+            Must NOT start with the prefix xn--
+            Must NOT end with the suffix -s3alias 
+    
+    Objects 
+        Objects (files) have a Key 
+        The key is the FULL path :
+            s3://my-bucket/my_file.txt    "my_file.txt" is Key 
+            s3://my-bucket/my_folder1/another_folder/my_file.txt     "my_folder1/another_folder/my_file.txt" is Key 
+        The key is composed of prefix + object name 
+            s3://my-bucket/my_folder1/another_folder/my_file.txt
+                "my_folder1/another_folder/"  is prefix 
+                "my_file.txt" is object 
+        There's no concept of "directories" within buckets 
+            (although the UI will trick you to think otherwise)
+        Just keys with very long names that contain slashes("/")
+    
+        cont.
+            Object values are the content of the body :
+                Max. Object size is 5 TB (5000 GB)
+                if uploading more than 5 GB, must use "multi-part upload"
+            Metadata (list of text key / value pairs - system or user metadata)
+            Tags (Unicode key / value pair - up to 10) - useful for security / lifecycle 
+            Version ID (if versioning is eanbled)
+
+
+2. Security 
+    User-Based 
+        IAM Policies - which API calls should be allowed for a specific user from IAM 
+    Resource-Based 
+        Bucket Policies - bucket wide rules from the S3 console - allows cross account  - common
+        Object Access Control List (ACL) - finer grain (can be disabled)
+        Bucket Access Control List (ACL) - less common (can be disabled)
+    Note : an IAM principal can access an S3 object if 
+        The user IAM permissions ALLOW it OR the resource policy ALLOWS it 
+        AND there's no explicit DENY 
+    Encryption : encrypt objects in Amazon S3 using encryption keys 
+
+
+3. S3 Bucket Policies
+    JSON based policies 
+        Resources : buckets and objects 
+        Effect : Allow / Deny 
+        Actions : Set of API to Allow or Deny 
+        Principal : The account or user to apply the policy to 
+    Use S3 bucket for policy to :
+        Grant public access to the bucket 
+        Force objects to be encrypted at upload 
+        Grant access to another account (Cross Account)
+
+        Bucket settings for Block Public Access 
+            These settings were created to prevent company data leaks 
+            If you know your bucket should never be public, leave these on 
+            Can be set at the account level 
+
+
+4. Static Website Hosting 
+    S3 can host static websites and have them accessible on the Internet 
+    The website URL will be (depending on the region)
+        http://bucket-name.s3-website-aws-region.amazonaws.com 
+        OR 
+        http://bucket-name.s3-website.aws-region.amazonaws.com 
+    If you get a 403 Forbidden error, make sure that bucket policy allows public reads !
+
+
+5. Versioning 
+    You can version your files in Amazon S3 
+    It is enabled at the bucket level 
+    Same key overwrite will change the "version" : 1, 2, 3, ...
+    It is best practice to version your buckets 
+        Protect against unintended deletes (ability to restore a version)
+        Easy roll back to previous version 
+    Notes :
+        Any file that is not versioned prior to enabling versioning will have version "null"
+        Suspending versioning does not delete the previous versions 
+
+
+6. Replication (CRR & SRR)
+    Must enable Versioning in source and destination buckets 
+    Cross-Region Replication (CRR)
+    Same-Region Replication (SRR)
+    Buckets can be in different AWS accounts 
+    Copying is asynchronous
+    Must give proper IAM permissions to S3 
+
+    Use cases :
+        CRR - compliance, lower latency access, replication across accounts 
+        SRR - log aggregation, live replication between production and test accounts 
+
+    Notes :
+        After you enable Replication, only new objects are replicated 
+        Optionally, you can replicate existing objects using S3 Batch Replication 
+            Replicates existing objects and objects that failed replication 
+        For DELETE operations
+            Can replicate delete markers from source to target (optional setting)
+            Deletions with a version ID are not replicated (to avoid malicious deletes)
+        There is no "chaining" of replication 
+            If bucket 1 has replication into bucket 2, which has replication into bucket 3
+            Then objects created in bucket 1 are not replicated to bucket 3
+
+
+7. S3 Durability and Availability
+    Durability :
+        High durability (99.99999999999%, 11 9's) of objects across multiple AZ 
+        If you store 10,000,000 objects with Amazon S3, you can on average expect to incur a loss of single object once every 10,000 years
+        Same for all storage classes
+    Availability :
+        Measures how readily available a service is 
+        Varies depending on storage class 
+        Example : S3 standard has 99.99% availability = not available 53 minutes a year 
+
+8. Storage Classes 
+    Amazon S3 Standard - General Purpose
+    Amazon S3 Standard-Infrequent Access (IA)
+    Amazon S3 One Zone-Infrequent Access
+    Amazon S3 Glacier Instant Retrieval
+    Amazon S3 Glacier Flexible Retrieval
+    Amazon S3 Glacier Deep Archive
+    Amazon S3 Intelligent Tiering
+
+    Can move between classes manually or using S3 Lifecycle configurations
+
+    Amazon S3 Standard - General Purpose
+        99.99% Availability 
+        Used for frequently accessed data 
+        Low latency and high throughput 
+        Sustain 2 concurrent facility failures
+
+        Use cases : Big Data analytics, mobile & gaming application, content distribution ...
+
+    Amazon S3 Infrequent Access (IA)
+        For data that is less frequently accessed, but requires rapid access when needed 
+        Lower cost than S3 Standard 
+        
+        Amazon S3 Standard-Infrequent Access (S3 Standard-IA)
+            99.9% Availability
+            Use cases : Disaster Recovery, backups 
+        Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA)
+            High durability(99.99999999999%) in a single AZ; data lost when AZ is destroyed
+            99.5% Availability
+            Use cases : Storing secondary backup copies of on-premise data, or data you can recreate
+        
+    Amazon S3 Glacier Stoage Classes 
+        Low-cost object storage meant for archiving / backup 
+        Pricing : price for stoage + object retrieval cost 
+
+        Amazon S3 Glacier Instant Retrieval 
+            Millisecond retrieval, great for data accessed once a quarter
+            Minimum storage duration of 90 days 
+        Amazon S3 Glacier Flexible Retrieval (formerly Amazon S3 Glacier)
+            Expedited (1 to 5 minutes), Standard (3 to 5 hours), Bulk (5 to 12 hours) - free 
+            Minimum sotrage duration of 90 days 
+        Amazon S3 Glacier Deep Archive - for long term storage 
+            Standard (12 hours), Bulk (48 hours)
+            Minimum storage duration of 180 days 
+    
+    S3 Intelligent-Tiering 
+        Small monthly monitoring and auto-tiering fee 
+        Moves objects automatically between Access Tiers based on usage 
+        There are no retrieval charges in S3 Intelligent-Tiering 
+
+        Frequent Access tier (automatic) : default tier 
+        Infrequent Access tier (automatic) : objects not accessed for 30 days 
+        Archive Instant Access tier (automatic) : objects not accessed for 90 days 
+        Archive Access tier (optional) : configurable from 90 days to 700+ days 
+        Deep Archive Access tier (optional) : configurable from 180 days to 700+ days 
+    
+    이해하기
+        https://aws.amazon.com/s3/storage-classes/ 
+        https://aws.amazon.com/s3/pricing 
+
+
+9. Moving between Storage Classes 
+    You can transition objects between storage classes 
+    For infrequently accessed object, move them to Standard IA 
+    For archive objects that you don't need fast access to, move them to Glacier or Glacier Deep Archieve
+    Moving objects can be automated using a Lifecycle Rules 
+
+    Lifecycle Rules 
+        Transition Actions - configure objects to transition to another storage class 
+            Move objects to Standard IA class 60 days after creation 
+            Move to Glacier for archiving after 6 months 
+        Expiration actions - configure objects to expire (delete) after some time 
+            Access log files can be set to delete after a 365 days 
+            Can be used to delete old versions of files (if versioning is enabled)
+            Can be used to delete incomplete Mutli-Part uploads 
+        Rules can be create for a certain prefix (example: s3://mybucket/mp3/*)
+        Rules can be create for certain objects Tags (example: Department: Finance)
+
+    Scenario 1
+        Your application on EC2 creates images thumbnails after profile photos are uploaded to Amazon S3.
+        These thumbnails can be easily recreated, and only need to be kept for 60 days.
+        The source images should be able to be immediately retrieved for these 60 days, and afterwards,
+        the user can wait up to 6 hours. How would you design this ?
+        - S3 source images can be on Standard, with a lifecycle configuration to transition them to Glacier after 60 days
+        - S3 thumbnatils can be on One-Zone IA, with a lifecycle configuration to expire them (delete them) after 60 days 
+    
+    Scenario 2
+        A rule in your company states that you should be able to recover your deleted S3 objects immediately for 30 days,
+        although this may happen rarely. After this time, and for up to 365 days, deleted objects should be recoverable within 48 hours.
+        - Enable S3 Versioning in order to have object verions, so that "deleted objects" are in fact hidden by a "delete marker" and can be recovered
+        - Transition the "noncurrent verions" of the object to Standard IA 
+        - Transition afterwards the "noncurrent verions" to Glacier Deep Archieve
+
+
+10. Aamazon S3 Analytics - Storage Class Analysis 
+    Help you decide when to transition objects to the right storage class 
+    Recommendations for Standard and Standard IA 
+        Does NOT work for One-Zone IA or Glacier 
+    Report is updated daily 
+    24 to 48 hours to start seeing data analysis 
+    Good first step to put together Lifecycle Rules (or improve them)!
+
+
+11. S3 - Requester Pays 
+    In general, bucket owners pay for all Amazon S3 storage and data transfer costs associated with their bucket
+    With Requester Pays buckets, the requester instead of the bucket owner pays the cost of the request and the data download from the bucket 
+    Helpful when you want to share large datasets with other accounts 
+    The requester must be authenticated in AWS (cannot be anonymous)
+
+
+12. S3 Event Notifications 
+    S3:ObjectCreated, S3:ObjectRemoved, S3:ObjectRestore, S3:Replication, ...
+    Object name filtering possible (*.jpg)
+    Use case: generate thumbnails of images uploaded to S3 
+    Can create as many "S3 events" as desired 
+    S3 event noficiations typically deliver events in seconds but can sometimes take a minute or longer 
+
+    IAM Permissions 
+        SNS Resource (Access) Policy 
+        SQS Resource (Access) Policy 
+        Lambda Resource (Access) Policy 
+        -> remember All event alarm is target 
+
+    S3 Event Notifications with Amazon EventBridge 
+        event -> Amazon S3 bucket -> All events -> Amazon EventBridge -> rules -> Over 18 AWS services as destinations
+        Advanced filtering options with JSON rules (metadata, object size, name ...)
+        Multiple Destinations - example) Step Functions, Kinesis Stream / Filehose ...
+        EventBridge Capabilities - Archive, Replay Events, Reliable delivery 
+
+
+13. S3 - Baseline Performance 
+    Amazon S3 automatically scales to high request rates, latency 100-200 ms 
+    Your application can achieve at least 3,500 PUT/COPY/POST/DELETE and 5,500 GET/HEAD requests per second per prefix in a bucket 
+    There are no limits to the number of prefixes in a bucket 
+    Example (object path => prefix) :
+        bucket/folder1/sub1/file => /folder1/sub1/
+        bucket/folder1/sub2/file => /folder1/sub2/
+        bucket/1/file            => /1/
+        bucket/2/file            => /2/
+    If you spread reads across all four prefixes evenly, you can achieve 22,000 requests per second for GET and HEAD 
+
+    S3 Performance 
+        Multi-Part upload :
+            recommended for files > 100 MB,
+            must use for files > 5 GB 
+            Can help parallelize uploads (speed up transfers)
+            Big File -> Divide In parts -> Parallel uploads -> Amazon S3 
+        S3 transfer Acceleration
+            Increase transfer speed by transferring file to an AWS edge location which will forward the data to the S3 bucket in the target region 
+            Cmplatible with multi-part upload 
+            File in USA -> Fast (public www) -> Edge Location (USA) -> Fast (private AWS) -> S3 Bucket Australia 
+        S3 Byte-Range Fetches 
+            1. Parallelize GETs by requesting specific byte ranges 
+                Better resilience in case of failures 
+                Can be used to speed up downloads 
+                File in S3 -> Part 1, 2, 3 ... N ... siliencing & Requests in parallel 
+            2. Can be used to retrieve only partial data (for example the head of a file)
+                File in S3 -> header (Byte-range request for header (first XX bytes))
+
+
+14. S3 Select & Glacier Select 
+    Retrieve less data using SQL by performing server-side filtering 
+    Can filter by rows & columns (simple SQL statements)
+    Less network transfer, less CPU cost client-side 
+    Up to 400% Faster, Up to 80% Cheaper 
+    Client -> Get CSV with S3 Select -> Amazon S3
+                                        -> Amazon S3 -> Server-side filtering -> Amazon S3 
+                                                                                    -> Send filtered dataset -> Client 
+
+
+15. S3 Batch Operations 
+    Perform bulk operations on existing S3 objects with a single request, example :
+        Modify object metadata & properties 
+        Copy objects between S3 buckets 
+        Encrypt un-encrypted objects 
+        Modify ACLs, tags 
+        Restore objects from S3 Glacier 
+        Invoke Lambda function to perform custom action on each object 
+    A job consists of a list of objects, the action to perform, and optional parameters 
+    S3 Batch Operations manages retires, tracks progress, sends completion notifications, generate reports ...
+    You can use S3 Inventory to get object list and use S3 Select to filter your objects 
+    S3 Inventory -> Objects List Report -> S3 Select (Filter) -> filtered list -> S3 Batch Operations -> Processed Objects 
+                                                            User : operation + parameters -> 
+
+
+16. S3 - Storage Lens 
+    Understand, analyze, and optimize storage across entire AWS Organization
+    Discover anomalies, identify cost efficiencies, and apply data protection best practices across entire AWS Organization (30 days usage & activity metrics)
+    Aggregate data for Organization, specific accounts, regions, buckets, or prefixes 
+    Default dashboard or create your own dashboards 
+    Can be configured to export metrics daily to an S3 bucket (CSV, Parquet)
+                    -> Organization  -> 
+                    -> Accounts      ->                                       -> Summary Insights
+    S3 Storage Lens -> Regions       ->  Aggregate   -> Analyze (Dashboard)   -> Data Protection
+                    -> Buckets       ->                                       -> Cost Efficiency
+                    -> Configure     ->                                       -> Optimize
+
+    Default Dashboard 
+        Visualize summarized insights and trends for both free and advanced metrics 
+        Default dashboard show Multi-Region and Multi-Account data 
+        Preconfigured by Amazon S3 
+        Can't be deleted, but can be disabled 
+        https://aws.amazon.com/blogs/aws/s3-storage-lens 
+    
+    Metrics 
+        Summary Metrics 
+            General insights about your S3 storage 
+            StorageBytes, ObjectCount ...
+            Use cases : identify the fastest-growing (or not used) buckets and prefixes 
+        Cost-Optimization Metrics 
+            Provide insights to manage and optimize your storage costs 
+            NonCurrentVersionStorageBytes, IncompleteMultipartUploadStorageBytes ...
+            Use cases : identify buckets with incomplete multipart uploaded older than 7 days, 
+                Identify which objects could be transitioned to lower-cost sotrage class 
+        Data-Protection Metrics 
+            Provide insights for data protection features 
+            VersioningEnabledBucketCount, MFADeleteEnabledBucketCount, SSEKMSEnabledBucketCount, CrossRegionReplicationRuleCount ...
+            Use cases : identify buckets that aren't following data-protection best practices 
+        Access-management Metrics 
+            Provide insights for S3 Object Ownership 
+            ObjectOwnershipBucketOwnerEncorcedBucketCount ...
+            Use cases : identify which Object Ownership settings your buckets use 
+        Event Metrics 
+            Provide insights for S3 Event Notifications 
+            EventNotificationEnabledBucketCount (identify which buckets have S3 Event Notifications configured)
+        Performance Metrics
+            Provide insights for S3 Transfer Acceleration 
+            TransferAccelerationEnabledBucketCount (identify which buckets have S3 Transfer Acceleration enabled)
+        Activity Metrics 
+            Provide insights about how your storage is requested 
+            AllRequests, GetRequests, PutRequests, ListRequests, BytesDownloaded ...
+        Detailed Status Code Metrics 
+            Provide insights for HTTP status codes 
+            200OKStatusCount, 403ForbiddenErrorCount, 404NotFoundErrorCount ...
+
+        Free vs. Paid 
+            Free Metrics 
+                Automatically available for all customers 
+                Contains around 28 usage metrics 
+                Data is available for queries for 14 days 
+            Advanced Metrics and Recommendations 
+                Additional paid metrics and features 
+                Advanced Metrics - Activity, Advanced Cost Optimization, Advanced Data Protection, Status Code 
+                CloudWatch Publishing - Access metrics in CloudWatch without additional charges 
+                Prefix Aggregation - Collect metrics at the prefix level 
+                Data is available for queries for 15 months 
