@@ -1,0 +1,187 @@
+
+1. Object Encryption 
+    You can encrypt objects in S3 buckets using one of 4 methods 
+
+    Server-Side Encryption (SSE)
+        Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3) - Enabled by Default 
+            Encrypts S3 objects using keys handled, managed, and owned by AWS 
+        Server-Side Encryption with KMS Keys stored in AWS KMS (SSE-KMS)
+            Leverage AWS Key Management Service (AWS KMS) to manage Encryption keys 
+        Server-Side Encryption with Customer-Provided Keys (SSE-C)
+            When you want to manage your own encryption keys 
+    Client-Side Encryption 
+
+    It's important to understand which ones are for which situation for the exam 
+
+    SSE-S3 
+        Encryption using keys handled, managed, and owned by AWS 
+        Object is encrypted server-side 
+        Encryption type is AES-256
+        Must set header "x-amz-server-side-Encryption": "AES256"
+        Enabled by default for new buckets & new objects 
+        User -> upload (HTTP(S) + Header) -> Amazon S3 (Object + S3 Owned Key => Encryption => S3 Bucket)
+
+    SSE-KMS 
+        Encryption using keys handled and managed by AWS KMS (Key Management Service)
+        KMS advantages : user control + audit key usage using CloudTrail 
+        Object is encrypted server side 
+        Must set header "x-amz-server-side-encryption": "aws:kms"
+        User -> upload (HTTP(S) + Header) -> Amazon S3 (Object + AWS KMS KEY => Encryption => S3 Bucket)
+        * S3 Bucket에서 파일을 읽기 위해서, 객체 자체에 Access 할 수 있어야 하며... KMS Key에도 Access 할 수 있어야 한다.
+
+        Limitation 
+            If you use SSE-KMS, you may be impacted by the KMS limits 
+            When you upload, it calls the GenerateDataKey KMS API 
+            When you download, it calls the Decrypt KMS API 
+            Count towards the KMS quota per second (5500, 10000, 30000 req/s based on region)
+            You can request a quota increase using the Service Quotas Console 
+        User -> Upload / download (SSE-KMS) -> S3 Bucket <- KMS Key API call
+        * S3 Bucket 처리량이 매우 많고 모든 Object가 KMS Key로 encrypt 되어 있다면.. 일종의 스로틀링 활용 사례가 될 수 있다.
+
+    SSE-C 
+        Server-Side Encryption using keys fully managed by the customer outside of AWS 
+        Amazon S3 does NOT store the Encryption key you provide 
+        HTTPS must be used
+        Encryption key must provided in HTTP headers, for every HTTP request made 
+        User -> upload (HTTPS ONLY + Key in Header) -> Amazon S3 (Object + Client-Provided Key => Encryption => S3 Bucket)
+        * 사용자가 upload 된 파일을 읽으려면 파일을 암호화했던 KEY를 제공해야 한다.
+        
+    Client-Side Encryption
+        Use client libraries such as Amazon S3 Client-Side Encryption Library 
+        Clients must encrypt data themselves before sending to Amazon S3 
+        Clients must decrypt data themselves when retrieving from Amazon S3 
+        Customer fully manages the keys and encryption cycle 
+        File + Client Key => Encryption => File (encrypted) => upload (HTTP(S)) => Amazon S3 (S3 Bucket)
+
+    Encryption in trasit (SSL/TLS)
+        Encryption in flight is also called SSL/TLS 
+        Amazon S3 exposes two endpoints :
+            HTTP Endpoint - non encrypted
+            HTTPS Endpoint - encryption in flight 
+        HTTPS is recommended 
+        HTTPS is mandatory for SSE-C 
+        Most clients would use the HTTPS endpoint by default 
+    
+    Force Encryption in Transit 
+        aws:SecureTransport 
+            User -> http  (X)   -> S3 Bucket - Bucket Policy : "Condition": {"Bool": {"aws:SecureTransport": "false"}}
+            User -> https (O)   ->  
+
+    ** DSSE-KMS ? '23년 6월 출시
+        Secure your objects with two separate layers of encryption
+    
+    Default Encryption vs. Bucket Policies 
+        SSE-S3 Encryption is automatically applied to new objects stored in S3 bucket 
+        Optionally, you can "force Encryption" using a bucket policy and refuse any API call to PUT an S3 object without encryption headers (SSE-KMS or SSE-C)
+
+        Note: Bucket Policies are evaluated before "Default Encryption"
+
+
+2. CORS 
+    What is CORS ?
+        Cross-Origin Resource Sharing (CORS)
+        Origin = scheme (protocol) + host (domain) + port 
+            example: https://www.example.com (implied port is 443 for HTTPS, 80 for HTTP)
+        Web Browser based machanism to allow requests to other origins while visiting the main origin 
+        Same origin: http://example.com/app1 & http://example.com/app2 
+        Different origins : http://www.example.com & http://other.example.com 
+        The requests won't be fulfilled unless the other origin allows for the requests, using CORS Headers (example: Access-Control-Allow-Origin)
+
+    Amazon S3 - CORS 
+        If a client makes a cross-origin request on our S3 bucket, we need to enable the correct CORS headers 
+        It's a popular exam question 
+        You can allow for a specific origin or for * (all origin)
+        CORS는 웹 브라우저 보안 메커니즘, 다른 origin에서 한 S3의 Bucket에 들어 있는 object를 요청할 수 있게 해줌..
+        source bucket에서 target bucket으로 데이터를 가져오려면 target bucket에 CORS 설정을 추가해야 한다.
+
+
+3. MFA Delete 
+    MFA (Multi-Factor Authentication) - force users to generate a code on a device (usually a mobile phone or hardware)
+        before doing important operations on S3 
+    MFA will be required to :
+        Permanently delete an object version 객체 버전 영구 삭제
+        SuspendVersioning on the bucket 버킷에서 버저닝 중단
+    MFA won't be required to :
+        EnableVersioning 
+        List deleted versions 
+    To use MFA Delete, Versioning must be enabled on the bucket 
+    Only the bucket owner (root account) can enable/disable MFA Delete 
+    * MFA Delete는 추가 보호 기능으로 특정 객체 버전의 영구 삭제를 방지하는 역할 
+    AWS Console에서는 설정할 수 없고, AWS CLI로 설정해야 한다.
+        MFADelete=Enabled 
+        object의 영구 삭제를 위해서는 AWS CLI로 삭제하거나, MFADelete=Disabled로 수정하고 삭제해야 한다.
+
+
+4. S3 Access Logs 
+    For audit purpose, you may want to log all access to S3 buckets 
+    Any request made to S3, from any account, authorized or denied, will be logged into another S3 bucket 
+    That data can be analyzed using data analysis tools ...
+    The target logging bucket must be in the same AWS region 
+    The log format is at :
+        https://docs.aws.amazon.com/AmazonS3/latest/dev/LogFormat.html 
+    User requests <-> My-bucket -> log all requests (Logging Bucket)
+
+    Warning 
+        Do not set your logging bucket to be the monitored bucket 
+        It will create a logging loop, and your bucket will grow exponentially
+        User PutObject -> App Bucket & Logging Bucket ...-> Logging loop 
+
+
+5. Pre-Signed URLs 
+    Generate pre-signed URLs using the S3 Console, AWS CLI or SDK 
+    URL Expiration 
+        S3 Console - 1 min up to 720 mins (12hours)
+        AWS CLI - configure expiration with --expires-in parameter in seconds 
+            (default 3600 secs, max. 604800 secs ~ 168 hours)
+    Users given a pre-signed URL inherit the permissions of the user that generated the URL for GET/PUT 
+    Example :
+        Allow only logged-in users to download a premium video from your S3 bucket 
+        Allow an ever-changing list of users to download files by generating URLs dynamically 
+        Allow temporarily a user to upload a file to a precise location in your S3 bucket 
+
+
+6. S3 Glacier Vault Lock 
+    Adopt a WORM (Write Once Read Many) model 
+    Create a Vault Lock Policy 
+    Lock the policy for future edits (can no loger be changed or deleted)
+    Helpful for compliance and data retention 
+    * 규정 준수, 데이터 보존과 같은 법률적인 사항에 유용함
+
+    ** S3 Object Lock (versioning must be enabled)
+        Adopt a WORM (Write Once Read Many) model 
+        Block an object version deletion for a specified amount of time 
+        Retention mode :
+            Compliance :
+                Object verions can't be overwritten or deleted by any user, including the root user 
+                Objects retention mode can't be changed, and retention periods can't be shortened 
+            Governance :
+                Most users can't overwrite or delete an object verion or alter its lock settings 
+                Some users have special permissions to change the retention or delete the object 
+        Retention Period : protect the object for a fixed period, it can be extended 
+        Legal Hold :
+            protect the object indifinitely, independent from retention period 
+            can be freely placed and removed using the s3:PutObjectLegalHold IAM permission 
+
+
+7. S3 Access Points 
+    Access Points simplify security management for S3 Buckets 
+    Each Access Point has :
+        its own DNS name (Internet Origin or VPC Origin)
+        an access point policy (similar to bucket policy) - manage security at scale 
+
+    VPC Origin 
+        We can define the access point to be accessible only from within the VPC 
+        You must create a VPC Endpoint to access the Access Point (Gateway or Interface Endpoint)
+        The VPC Endpoint Policy must allow access to the target bucket and Access Point 
+            VPC Endpoint (Endpoint Policy)
+            VPC Origin (Access Point Policy)
+            S3 Bucket (Bucket Policy)
+
+    S3 Object Lambda (S3 object 활용 사례)
+        Use AWS Lambda Functions to change the object before it is retrieved by the caller application 
+        Only one S3 bucket is needed, on top of which we create S3 Access Point and S3 Object Lambda Access Point 
+        Use cases :
+            Redacting personally identifiable information for analytics or non-production environments
+            Converting across data formats, such as converting XML to JSON 
+            Resizing and watermaking images on the fly using caller-specific details, such as the user who requested the object 
+
