@@ -150,4 +150,55 @@ AWS Integration & Messaging
             Useful for cross-account access to SNS topics 
             Useful for allowing other services (S3...) to write to an SNS topic 
 
+    SNS + SQS : Fan Out (Pattern)
+        Push on in SNS, receive in all SQS queues that are subscribers 
+        Fully decoupled, no data loss 
+        SQS allows for : data persistence, delayed processing and retires of work 
+        Ability to add more SQS subscribers over time 
+        Make sure your SQS queue access policy allows for SNS to write 
+        Cross-Region Delivery : works with SQS Queues in other regions (security policy allows it)
+        Buing Service -> SNS Topic -> SQS Queue -> Fraud Service 
+                                   -> SQS Queue -> Shipping Service 
+    
+        Application : S3 Events to multiple queues 
+            For the same combination of : event type (e.g., object create) and prefix (e.g., images/) you can only have "one S3 Event rule"
+            If you want to send the same S3 event to many SQS queues, use fan-out 
+            S3 Object created... ----events----> Amazon S3 -> SNS Topic ----Fan-out----> SQS Queues 
+                                                                        ----Fan-out----> SQS Queues 
+                                                                        ----Fan-out----> Lambda Function
+        Application : SNS to Amazon S3 through Kinesis Data Firehose 
+            SNS can send to Kinesis and therefore we can have the following solutions architecture :
+                Buying Service -> SNS Topic -> Kinesis Data Firehose (KDF) -> Amazon S3 
+                                                                           -> Any supported KDF Destination
+        
+    Amazon SNS - FIFO Topic 
+        FIFO = First In First Out (ordering of messages in the topic)
+        Producer ----Send messages----> SNS (FIFO Topic) ----Receive messages----> Subscribers (SQS FIFO)
+                      4  3  2  1                             4  3  2  1 
+        Similar features as SQS FIFO :
+            Ordering by Message Group ID (all messages in the same group are ordered)
+            Deduplication using a Deduplication ID or Content Based Deduplication
+        Can have SQS Standard and FIFO queues as subscribers 
+        Limited throughput (same throughput as SQS FIFO)
+    
+    *** SNS - Message Filtering 
+        JSON policy used to filter messages sent to SNS topic's subscriptions
+        If a subscription doesn't have a filter policy, it receives every message 
+            Buying Service ----New transaction----> SNS Topic ----Filter Policy (State: Placed)----> SQS Queue (Placed orders)
+                            Order: 1036                       ----Filter Policy (State: Cancelled)----> SQS Queue (Cancelled orders)
+                            Product: Pencil                   ----Filter Policy (State: Cancelled)----> Email subscription (Cancelled orders)
+                            Qty: 4                            ----Filter Policy (State: Declined)----> SQS Queue (Declined orders)
+                            "State : Placed"                  -> SQS Queue (All)
 
+    ***** Amazon SNS Subscription Protocol :
+        Amazon Kinesis Data Firehose
+        Amazon SQS 
+        AWS Lambda 
+        Email 
+        Email-JSON 
+        HTTP
+        HTTPS 
+        SMS 
+    * SNS Pan Out pattern을 적용하고 싶으면 SNS Protocol에 Amazon SQS를 설정한다.
+
+    
