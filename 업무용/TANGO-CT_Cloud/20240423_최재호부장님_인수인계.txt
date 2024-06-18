@@ -128,4 +128,18 @@ pydantic
 
 
 
+# 24.06.18
+Cipher-util 업데이트 
+    tango-operation-
+    
+    common project에서 cipher-util verison 변경
+    collect project에서 deploy.target.dir
 
+    maven build는 common project에서만 해야함 
+
+    빌드 후,
+    lib/tango-cipher-util-*.jar와 
+    collect-common-*.jar 두개를 써야 한다.
+
+    배포서버 (ocadp-015)
+    PROD_DEPLOY/packaging 
