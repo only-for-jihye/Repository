@@ -162,3 +162,150 @@
         Users who see the dashboard can also see the underlying data 
 
 
+6. AWS Glue 
+    Managed extract, transform, and load (ETL) service 
+    Userful to prepare and transform data for analytics 
+    Fully serverless service 
+        S3 Bucket  --
+                     --Extract-->  Glue ETL  --Load-->  Redshift Data Warehouse 
+        Amazon RDS --              Transform
+
+    AWS Glue - Convert data into Parquet format 
+        S3 Put  ->  Input S3 Bucket  --Import CSV-->  Glue ETL  --Parquet-->  Output S3 Bucket  --Analyze-->  Amazon Athena 
+        * automated
+            S3 Put  ->  Input S3 Bucket  --Event notifications On S3 PUT-->  Lambda Function (EventBridge works as an alternative)  --Trigger Glue ETL Job-->  Glue ETL  --Parquet-->  Output S3 Bucket  --Analyze-->  Amazon Athena 
+    
+    Glue Data Catalog : catalog of datasets 
+        Amazon S3           ->                      
+        Amazon RDS          ->    AWS Glue      --Writes Metadata-->  AWS Glue Data Catalog  --Data discovery--> Amazon Athena
+        Amazon DynamoDB     ->  Data Crawler                          Database     Database                      Amazon Redshift Spectrum   
+        JDBC                ->                                         Tables       Tables                       Amazon EMR
+                                                                     (Metadata)   (Metadata)
+        
+                                                                      AWS Glue Data Catalog -> Glue Jobs (ETL)
+
+    Glue - things to know at a high-level 
+        - Glue Job Bookmarks :
+            prevent re-processing old data 
+        - Glub Elastic Views : 
+            Combine and replicate data across multiple data stores using SQL 
+            No custom code, Glue monitors for changes in the source data, serverless 
+            Leverages a "virtual table" (materialized view)
+        - Glue DataBrew :
+            clean and normalize data using pre-built transformation 
+        - Glue Studio : 
+            new GUI to create, run and monitor ETL jobs in Glue 
+        - Glue Streaming ETL (built on Apache Spark Structured Steaming) :
+            compatible with Kinesis Data Streaming, Kafka, MSK (managed Kafka)
+
+
+7. AWS Lake Formation 
+    Data lake = central place to have all your data for analytics purposes 
+    Fully managed service that makes it easy to setup a data lake in days 
+    Discover, cleanse, transform, and ingest data into your Data Lake 
+    It automates many complex manual steps (collecting, cleansing, moving, cataloging, data, ...) and de-duplicate (using ML Transforms)
+    Combine structured and unstructured data in the data lake 
+    "Out-of-the-box source blueprints" (migration) : S3, RDS, Relational & NoSQL DB ...
+    Fing-grained Access Control for your applications (row and column-level)
+    Built on top of AWS Glue (실제로 상호작용은 하지 않음)
+
+    Data Sources                    --ingest (using Blueprints)-->  AWS Lake Formation      ->    Athena         ->  Users
+        Amazon S3                                                   Source Crawlers               Redshift
+        RDS                                                         ETL and Data Prep.            EMR
+        Aurora                                                      Data Catalog                  Apache Spark
+        On-premises Database (SQL & NoSQL)                          Security Settings
+                                                                    Access Control
+                                                                    
+                                                                    AWS Lake Formation <-> Data Lake (stored in S3)
+
+    AWS Lake Formation
+        Why do we use AWS Lake Formation ?
+            - Centralized Permission 
+        
+        Example 
+            Data Sources    --ingest-->   AWS Lake Formation      ->  Athena  ->  Quicksight  -> Users
+                Amazon S3                 Access Control
+                RDS                       Column-level security
+                Aurora                                                  AWS Lake Formation <-> Data Lake (stored in S3)
+        -> Data Source가 많은 경우, 각각 보안관리를 하기에 쉽지 않음
+           따라서 AWS Lake Formation을 통해 데이터를 제공하게 되면, 사용자는 읽기 권한만 얻을 수 있고 Data Source가 다수라도 보안관리를 한 곳에서 집중하여 할 수 있음
+
+
+8. Kinesis Data Analytics for SQL applications 
+    Sources                     -> Kinesis Data Analytics for SQL Applications      Slinks
+        Kinesis Data Streams                                                    ->  Kinesis Data Streams  ->  AWS Lambda    ->  anywhere 
+        Kinesis Data Firehose                                                                             ->  Applications  ->  anywhere
+                                                                                ->  Kinesis Data Firehose ->  Amazon S3
+                                                                                                          ->  Amazon Redshift (COPY through S3)
+                                                                                                          ->  Other Firehose destinations
+                    SQL Statements -> Kinesis Data Analytics for SQL Applications <- Reference Data in S3 
+
+    Kinesis Data Analytics (SQL application)
+        Real-time analytics on "Kinesis Data Streams & Firehose" using SQL 
+        Add reference data from Amazon S3 to enrich streaming data 
+        Fully managed, no servers to provision 
+        Automatic scaling 
+        Pay for actual consumption rate 
+        Output :
+            Kinesis Data Streams : create streams out of the real-time analytics queries 
+            Kinesis Data Firehose : send analytics query results to destinations
+        Use cases :
+            Time-series analytics 
+            Real-time dashboards 
+            Real-time metrics 
+
+
+9. Kinesis Data Anlaytics for Apache Flink 
+    Use Flink (Java, Scala or SQL) to process and analyze streaming data 
+        Kinesis Data Streams, Amazon MSK  ->  Kinesis Data Analytics For Apache Flink
+    Run any Apache Flink application on a managed cluster on AWS 
+        provisioning compute resources, parallel computation, automatic scaling 
+        application backups (implemented as checkpoints and snapshots)
+        Use any Apache Flink programming features 
+        Flink does not read from Firehose (use Kinesis Analytics for SQL instead)
+
+
+10. Amazon Managed Streaming for Apache Kafka (Apache MSK)
+    Alternative to Amazon Kinesis 
+    Fully managed Apache Kafka on AWS 
+        Allow you to create, update, delete clusters 
+        MSK creates & manages Kafka brokers nodes & Zookeeper nodes for you 
+        Deploy the MSK cluster in your VPC, multi-AZ (up to 3 for HA)
+        Automatic recovery from common Apache Kafka failures 
+        Data is stored on EBS volumes for as long as you want 
+    MSK Serverless 
+        Run Apache Kafka on MSK without managing the capacity 
+        MSK automatically provisions resources and scales compute & storage 
+    
+    Kinesis Data Streams  vs.  Amazon MSK 
+        Kinesis Data Streams                      Amazon MSK
+            1 MB message size limit                 1 MB default, configure for higher (ex : 10 MB)
+            Data Streams with Shards                Kafka Topics with Partitions
+            Shard Splitting & Merging               Can only add partitions to a topic 
+            TLS In-flight encryption                PLAINTEXT or TLS In-flight Encryption
+            KMS at-rest encryption                  KMS at-rest encryption
+
+
+11. Big Data Ingestion Pipeline 
+    We want the ingestion pipeline to be fully serverless 
+    We want to collect data in real time 
+    We want to transform the data 
+    We want to query the transformed data using SQL 
+    The reports created using the queries should be in S3 
+    We want to load that data into a warehouse and create dashboards 
+                                                Event 1 minute                                                           Ingestion Bucket                                                                                                        Reporting Bucket
+    IoT Devices (IoT Core)  --Real-time-->  Amazon Kinesis Data Streams  ->  Amazon Kinesis Data Firehose  ->  Amazon Simple Storage Service (S3)  ->  Amazon Simple Queue Service (Optional)  ->  AWS Lambda  --trigger-->  Amazon Athena -> Amazon Simple Storage(S3)
+                                                                             Amazon Kinesis Data Firehose  <->  AWS Lambda                                                                                 S3 --Pull data--> Amazon Athena    S3 -> Amazon QuickSight, Amazon Redshift 
+                                                                                                                                                                                                                                                    Amazon Reshift -> Amazon Quicksight
+    Discussion 
+        IoT Core allows you to harvest data from IoT devices 
+        Kinesis is great for real-time data collection 
+        Firehose helps with data delivery to S3 in near real-time (lowest 1 minute)
+        Lambda can help Firehose with data transformations
+        Amazon S3 can trigger notifications to SQS 
+        Lambda can subscribe to SQS (we could have connector S3 to Lambda)
+        Athena is a serverless SQL service and results are stored in S3 
+        The reporting bucket contains analyzed data and can be used by reporting tool such as AWS QuickSight, Redshift, etc ...
+
+
+
