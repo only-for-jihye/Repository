@@ -211,3 +211,104 @@
             Automatic dashboard to troubleshoot your application and related AWS services 
 
 
+4. AWS CloudTrail 
+    Provides governance, compliance and audit for your AWS Account 
+    CloudTrail is enabled by default 
+    Get an history of events / API calls made within your AWS Account by :
+        Console 
+        SDK 
+        CLI 
+        AWS Services 
+    Can put logs from CloudTrail into CloudWatch Logs or S3 
+    "A trail can be applied to All Regions (default) or a single Region"
+    If a resource is deleted in AWS, investigate CloudTrail first 
+
+    CloudTrail Diagram 
+        SDK
+        CLI 
+        AWS Console                 ->  CloudTrail Console (Inspect & AUdit)  ->  CloudWatch Logs, S3 Bucket 
+        IAM Users & IAM Roles 
+
+    CloudTrail Events 
+        Management Events :
+            Operations that are performed on resources in your AWS account 
+            Examples :
+                Configuring security (IAM AttachRolePolicy)
+                Configuring rules for routing data (Amazon EC2 CreateSubnet)
+                Setting up logging (AWS CloudTrail CreateTrail)
+            By default, trails are configured to log management events 
+            Can separate Read Events (that don't modify resources) from Write Events (that may modify resources)
+        Data Events :
+            By default, data events are not logged (because high volume operations)
+            Amazon S3 object-level activity (ex: GetObject, DeleteObject, PutObject) : can separate Read and Write Events 
+            AWS Lambda function execution activity (the Invoke API)
+        CloudTrail Insights Events :
+            Eanbled CloudTrail Insights to detect unusual activity in your account :
+                inaccurate resource provisioning
+                hitting service limits 
+                Bursts of AWS IAM actions 
+                Gaps in periodic maintenance activity 
+            CloudTrail Insights analyzes normal management events to create a baseline 
+            And then continuously analyzes write events to detect unusual patterns 
+                Anomalies appear in the CloudTrail console 
+                Event is sent to Amazon S3 
+                An EventBridge event is generated (for automation needs)
+            Management Events --Continuous analysis-->  CloudTrail Insights --generate-->  Insights Events  ->  CloudTrail Console, S3 Bucket, EventBridge event 
+
+    CloudTrail Events Retention
+        Events are stored for 90 days in CloudTrail
+        TO keep events beyond this period, log them to S3 and use Athena 
+        Management Events, Data Events, Insights Event  ->  CloudTrail (90 days retention)  --log-->  S3 Bucket (Long-term retention)  --analyze-->  Athena 
+    
+
+5. Amazon EventBridge + CloudTrail 
+    Amazon EventBridge - Intercept API Calls 
+        User  --DeleteTable API Call-->  DyanmoDB  --Log API call-->  CloudTrail (any API call)  --event-->  Amazon EventBridge  --alert-->  SNS
+    Amazon EventBridge + CloudTrail 
+        User  --AssumeRole-->  IAM (IAM Role)  --API Call logs-->  CloudTrail  --event-->  EventBridge  -->  SNS 
+        User  --AuthorizeSecurityGroupIngress--edit SG--Inbound Rules-->  Security Group (EC2)  --API Call logs-->  CloudTrail  --event-->  EventBridge  -->  SNS 
+
+
+6. AWS Config 
+    Helps with auditing and recording compliance of your AWS resources 
+    Helps record configurations and changes over time 
+    Questions that can be solved by AWS Config :
+        IS there unrestricted SSH access to my security groups ?
+        Do my buckets have any public access ?
+        How has my ALB configuration changed over time ?
+    You can receive alerts (SNS notifications) for any changes 
+    AWS Config is a per-region service 
+    Can be aggregated across regions and accounts 
+    Possibility of storing the configuration data into S3 (analyzed by Athena)
+    
+    Config Rules 
+        Can use AWS managed config rules (over 75)
+        Can make custom config rules (must be defined in AWS Lambda)
+            Ex: evaluate if each EBS disk is of type gp2 
+            Ex: evaluate if each EC2 instance is t2.micro 
+        Rules can be evaluated / triggered :
+            For each config change 
+            And / or : at regular time intervals 
+        AWS Config Rules does not prevent actions from happening (no deny)
+        Pricing : no free tier, $0.003 per configuration item recorded per region, $0.001 per config rule evaluation per region 
+    
+    AWS Config Resource 
+        View compliance of a resource over time 
+        View configuration of a resource over time 
+        View CloudTrail API calls of a resource over time 
+    
+    Config Rules - Remediations 
+        Automate remediation of non-compliant resources using SSM Automation Documents 
+        Use AWS-Managed Automation Documents or create custom Automation Documents
+            Tip : you can create custom Automation Documents that invokes Lambda function
+        You can set Remediation Retries if the resource is still non-compiant after auto-remediation 
+    
+    Config Rules - Notifications 
+        Use EventBridge to trigger notifications when AWS resources are non-compliant 
+            AWS Resources (Security Group, Lambda)  <--monitor--  AWS Config  --trigger-->  EventBridge  ->  Lambda, SNS, SQS 
+                                                 --NON_COMPLIANT-->
+        Ability to send configuration changes and compliance state notifications to SNS (all events - use SNS Filtering or filter at client-side)
+            AWS Resources (Security Group, Lambda)  <--monitor--  AWS Config  --trigger-->  SNS  --noticiation-->  Admin
+                                                  --All events-->
+                                        (configuration changes compliance state...)
+
