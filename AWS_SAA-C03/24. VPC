@@ -159,3 +159,189 @@ VPC - Virtual Private Cloud
         Use as Bastion Host ?   O                                                       O
 
 
+9. Security Groups & NACLs 
+    Security Groups : Stateful 
+    NACL : Stateless 
+
+    Network Access Control List (NACL)
+        NACL are like a firewall which control traffic from and to subnets 
+        "One NACL per subnet", new subnets are assigned the "Default NACL"
+        You define "NACL Rules" :
+            Rules have a number (1-32766), higher precedence with a lower number (우선순위)
+            First rule match will drive the decision 
+            Example : if you define #100 ALLOW 10.0.0.10/32 and #200 DENY 10.0.0.10/32, the IP address will be allowed because 100 has a higher precedence over 200 
+            The last rule is an asterisk (*) and denies a request in case of no rule match 
+            AWS recommends adding rules by increment of 100 
+        Newly create NACLs will deny everything 
+        NACL are a great way of blocking a specific IP address at the subnet level 
+    
+    Default NACL 
+        Accepts everything inbound/outbound with the subnets it's associated with 
+        Do "NOT" modify the Default NACL, instead create custom NACLs 
+    
+    Ephemeral Ports 
+        For any two endpoints to establish a connection, they must use ports 
+        Client connect to a "defined port", and expect a response on a "ephemeral port"
+        Different Operating Systems use different port ranges, examples :
+            IANA & MS Windows 10  ->  49152 ~ 65535
+            Many Linux Kernels    ->  32768 ~ 60999
+        * NACL with Ephemeral Ports 
+    
+    Create NACL rules for each target subnets CIDR 
+        NACL에 서브넷을 추가하면 NACL 규칙도 업데이트를 해서 연결 조합이 가능한지 확인해야 한다.
+
+    Security Groups  vs.  NACLs 
+        Security Group                                                          NACL 
+        Operates at the instance level                                          Operates at the subnet level
+        Supports allow rules only                                               Supports allow rules and deny rules 
+        "Stateful" : return traffic is automatically allowed,                   "Stateless" : return traffic must be explicitly allowed,
+            regardless of any rules                                                 by rules (think of ephemeral ports)
+        All rules are evaluated before deciding whether to allow traffic        Rules are evaluated in order (lowest to highest) when deciding whether to allow traffic, first mach wins
+        Applies to an EC2 instance when specified by someone                    Automatically applies to all EC2 instances in the subnet that it's associated with
+
+
+10. VPC Peering
+    Privately connect two VPCs using AWS' network 
+    Make them behave as if they were in the same network 
+    Must not have overlapping CIDRs 
+    VPC Peering connection is "NOT transitive" (must be established for each VPC that need to communiate with one another)
+    "You must update route tables in each VPC's subnets to ensure EC2 instances can communicate with each other"
+
+    Good to know 
+        You can create VPC Peering connection between VPCs in "different AWS accounts/regions"
+        You can reference a security group in a peered VPC (works cross accounts - same region)
+
+
+11. VPC Endpoints 
+    VPC Endpoints (AWS PrivateLink)
+        Every AWS service is publicly exposed (public URL)
+        VPC Endpoints (powered by AWS PrivateLink) allows you to connect to AWS services using a "private network" instead of using the public Internet 
+        They're redunant and scale horizontally 
+        They remove the need of IGW, NATGW, ... to access AWS Services 
+        In case of issues :
+            Check DNS Setting Resolution in your VPC 
+            Check Route Tables 
+
+    Types of Endpoints 
+        Interface Endpoints (powered by PrivateLink)
+            Provisions an ENI (private IP address) as an entry point (must attach a Security Group)
+            Supports most AWS services 
+            $ per hour + $ per GB of data processed 
+        Gateway Endpoints 
+            Provisions a gateway and must be used "as a target in a route table (does not use security groups)"
+            Supports both S3 and DynamoDB 
+            Free 
+
+    Gateway or Interface Endpoint for S3 ?
+        "Gateway is most likely going to be preferred all the time at the exam"
+        Cost : free for Gateway, $ for interface endpoint 
+        Interface Endpoint is preferred access is required from on-premises (Site to Site VPN or Direct Connect), a different VPC or a different region 
+
+
+12. VPC Flow Logs 
+    Capture information about IP traffic going into your interfaces :
+        VPC Flow Logs 
+        Subnet Flow Logs 
+        Elastic Network Interface (ENI) Flow Logs 
+    Helps to monitor & troubleshoot connectivity issues 
+    Flow logs data can go to S3, CloudWatch Logs, and Kinesis Data Firehose 
+    Captures network information from AWS managed interfaces too : ELB, RDS, ElastiCache, Redshift, WorkSpaces, NATGW, Transit Gateway ...
+
+    VPC Flow Logs Syntax 
+        Example)
+            version/account-id/interface-id/srcaddr/dstaddr/srcport/dstport/protocol/packets/bytes/start/end/action/log-status
+            2 123456789010 eni-1235b8ca123456789 172.31.16.139 172.31.16.21 20641 22 6 20 4249 1418530010 1418530070 ACCEPT OK
+            2 123456789010 eni-1235b8ca123456789 172.31.9.69 172.31.9.12 49761 3389 6 20 4249 1418530010 1418530070 REJECT OK
+        srcaddr & dstaddr : help identify problematic IP 
+        srcport & dstport : help identity problematic ports 
+        Action : success or failure of the request due to Security Group / NACL 
+        Can be used for analytics on usage patterns, or malicious behavior 
+        "Query VPC flow logs using Athena on S3 or CloudWatch Logs Insights"
+
+    VPC Flow Logs - Troubleshoot SG & NACL issues 
+        Look at the "ACTION" field 
+            Incoming Requests 
+                Inbound REJECT => NACL or SG 
+                Inbound ACCEPT, Outbound REJECT => NACL 
+            Outgoing Requests 
+                Outbound REJECT => NACL or SG 
+                Outbound ACCEPT, Inbound REJECT => NACL 
+        
+    VPC Flow Logs - Architecture 
+        VPC Flow Logs  ->  CloudWatch Logs  ->  CloudWatch Contributor Insights  ->  Top-10 addresses 
+        VPC Flow Logs  ->  CloudWatch Logs  --metric filter (SSH, RDP)-->  CW Alarm  --Alert-->  Amazon SNS 
+        VPC Flow Logs  ->  S3 Bucket  ->  Amazon Athena  ->  Amazon QuickSight
+
+
+13. AWS Site-to-Site VPN 
+    Virtual Private Gateway (VGW)
+        VPN concentrator on the AWS side of the VPN connection 
+        VGW is created and attached to the VPC from which you want to create the Site-to-Site VPN connection 
+        Possibility to customize the ASN (Autonomous System Number)
+    Customer Gateway (CGW)
+        Software application or physical device on customer side of the VPN connection 
+
+    Site-to-Site VPN Connections 
+        Customer Gateway Device (On-Premises)
+            What IP address to use ?
+                Public Internet-routable IP address for your Customer Gateway device 
+                If it's behind a NAT devbice that's enabled for NAT traversal (NAT-T), use the public IP address of the NAT device 
+        Important step : enable "Route Propagation" for the Virtual Private Gateway in the route table that is associated with your subnets 
+        If you need to ping your EC2 instances from on-premises, make sure you add the ICMP protocol on the inbound of your security groups 
+
+    AWS VPN CloudHub 
+        Provide secure communication between multiple sites, if you have multiple VPN connections 
+        Low-cost hub-and-spoke model for primary or secondary network connectivity between different locations (VPN only)
+        It's a VPN connection so it goes over the public Internet 
+        To set it up, connect multiple VPN connections on the same VGW, setup dynamic routing and configure route tables 
+
+
+14. Direct Connect (DX)
+    Provides a dedicated "private" connection from a remote network to your VPC 
+    Dedicated connection must be setup between your DC and AWS Direct Connect locations 
+    You need to setup a Virtual Private Gateway on your VPC 
+    Access public resources (S3) and private (EC2) on same connection 
+    Use Cases :
+        Increase bandwidth throughput - working with large data sets - lower cost 
+        More consistent network experience - applications using real-time data feeds 
+        Hybrid Environments (on prem + cloud)
+    Supports both IPv4 and IPv6 
+
+    Direct Connect Gateway 
+        IF you want to setup a Direct Connect to one or more VPC in many different regions (same account), you must use a Direct Connect Gateway 
+
+    Direct Connect - Connection Types 
+        Dedicated Connections : 1 Gbps, 10 Gbps and 100 Gbps capacity
+            Physical ethernet port dedicated to a customer 
+            Request made to AWS first, then completed by AWS Direct Connect Partners 
+        Hosted Connections : 50 Mbps, 500 Mbps, to 10 Gbps 
+            Connection requests are made via AWS Direct Connect Partners 
+            Capacity can be "added or removed on demand"
+            1, 2, 5, 10 Gbps available at select AWS Direct Connect Partners 
+        Lead times are often longer than 1 month to establish a new connection 
+
+    Direct Connect - Encryption 
+        Data in transit is "not encrypted" but is private 
+        AWS Direct Connect + VPN provides an IPsec-encrypted private connection 
+        Good for an extra level of security, but slightly more complex to put in place 
+
+    Direct Connect - Resiliency 
+        High Resiliency for Critical Workloads 
+            Region  ->  AWS Direct Connect Location 1  ->  Corporate data center 
+                    ->  AWS Direct Connect Location 2  ->  Corporate data center 
+            : One connection at multiple locations 
+        Maximum Resiliency for Critical Workloads 
+            Region  ->  AWS Direct Connect Location 1  ->  Corporate data center 
+                    ->  AWS Direct Connect Location 1  ->  Corporate data center 
+                    ->  AWS Direct Connect Location 2  ->  Corporate data center 
+                    ->  AWS Direct Connect Location 2  ->  Corporate data center 
+            : Maximum resilience is achieved by separate connections terminating on separate devices in more than one location 
+
+    
+15. Site-to-Site VPN connection as a backup 
+    In case Direct Connect fails, you can set up a backup Direct Connect connection (expensive), or a Site-to-Site VPN connection 
+        Corporate DC  <--Direct Connect (Primary Connection)-->  VPC
+                     <--Site-to-Site VPN (Backup Connection)-->
+
+
+16. 
