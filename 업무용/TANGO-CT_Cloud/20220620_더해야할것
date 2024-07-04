@@ -1,8 +1,0 @@
-# 2022.06.20_더해야할 것
-
-# livenessprobe에 추가할 sh 파일 하나 만들기
-    - adaptorWatch.py 참고해서 만들어야함
-    - true (0)로 떨어지면 OK
-    - 그 밖에 X
-
-

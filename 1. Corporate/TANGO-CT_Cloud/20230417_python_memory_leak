@@ -1,0 +1,10 @@
+# 2023.04.17 python memory leak
+
+
+python에는 memory leak이 발생한다.
+주로 변수가 정리가 안될 때. python의 메모리 관련해서는 곧 정리할 것이다.
+
+set()
+list()
+
+차이 확인 필요

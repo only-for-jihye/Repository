@@ -1,0 +1,78 @@
+
+1. Well Architected Framework 
+    General Guiding Principles 
+        https://aws.amazon.com/architecture/well-architected 
+        Stop guessing your capacity needs 
+        Test systems at production scale 
+        Automate to make architectural experimentation easier
+        Allow for evolutionary architectures
+            Design based on changing requirements 
+        Drive architectures using data 
+        Improve through game days 
+            Simulate applications for flash sale days 
+
+    6 Pillars
+        1) Operational Excellence 
+        2) Security 
+        3) Reliability
+        4) Performance Efficiency 
+        5) Cost Optimization 
+        6) Sustainability
+        They are not something to balance, or trade-offs, they're a synergy
+
+    AWS Well-Architected Tool 
+        Free tool to "review your architectures" against the 6 pillars Well-Architected Framework and "adopt architectural best practices"
+        How does it work ?
+            Select your workload and answer questions
+            Review your answers against the 6 pillars 
+            Obtain advice : get videos and documentations, generate a report, see the results in a dashboard 
+
+
+2. Trusted Advisor 
+    No need to install anything - high level AWS account assessment 
+    *** Analyze your AWS accounts and provides recommendation on 5 categories 
+        Cost Optimzation 
+        Performance 
+        Security 
+        Fault tolerance 
+        Service limits 
+
+    Support Plans 
+        7 CORE CHECKS (Basic & Developer Support plan)
+            S3 Bucket Permissions 
+            Security Group - Specific Ports Unrestricted
+            IAM Use (one IAM user minimum)
+            MFA on Root Account 
+            EBS Public Snapshots 
+            RDS Public Snapshots 
+            Service Limits
+        FULL CHECKS (Business & Enterprise Support plan)
+            Full Checks available on the 5 categories 
+            Ability to set CloudWatch alarms when reaching limits 
+            "Programmatic Access using AWS Support API"
+
+    
+3. More Architecture Examples 
+    We've explored the most important architectural patterns :
+        Classic : EC2, ELB, RDS, ElastiCache, etc ...
+        Serverless : S3, Lambda, DynamoDB, CloudFront, API Gateway, etc ...
+    If you want to see more AWS architectures :
+        https://aws.amazon.com/architecture/
+        https://aws.amazon.com/solutions/
+
+
+4. 시험 대비
+    FAQ 읽어볼 것...
+    https://aws.amazon.com/architecture/
+    https://aws.amazon.com/solutions/
+    이것도 읽어볼 것..
+
+    1. 클라우드 구축 모범 사례: https://d1.awsstatic.com/whitepapers/AWS_Cloud_Best_Practices.pdf (보관본)
+
+    2. Well-Architected Framework(프레임 워크 구축 모범 사례) 관련 백서는 다음 링크에서 확인하세요. https://aws.amazon.com/blogs/aws/aws-well-architected-framework-updated-white-papers-tools-and-best-practices/
+
+    3. 재해 복구 관련 백서: https://d1.awsstatic.com/whitepapers/aws-disaster-recovery.pdf (보관본)
+
+    AWS는 Well-Architected Framework 백서를 권장합니다. https://d1.awsstatic.com/whitepapers/architecture/AWS_Well-Architected_Framework.pdf
+
+    

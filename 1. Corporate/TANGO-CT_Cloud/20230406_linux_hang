@@ -1,0 +1,36 @@
+# 2023.04.06
+
+Tainted: G 
+
+echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message
+python    D   ffff881060f4f720    0   17964   10993  0x10000080
+
+Call Trace:
+nfs_permission
+security_inode_permission
+...
+
+참고자료 ; # https://santander.co.kr/49
+
+* Taint : Kernel 패닉 등이 일어날 때 발생...
+
+1. P: Proprietary License 를 갖고있는 모듈이 문제를 일으켰다는 내용으로 독점적 라이센스를 뜻한다.
+   즉 써드파티따위에서 GNU 나 GPL 아래 있는 모듈이 아닌 자체제작된 모둘이라는 것으로 source 코드에
+   대한 지원이 불가능함을 뜻한다. 즉 일단 써드파티 모듈부터 까고 봐야 한다는거지!
+
+2. G: 잘 안나오는녀석이긴한데, 이건 말 그대로 GPL 에 영향에 있는 공개된 모듈에서 문제가 됬다는 것이다.
+   P 의 반대로 생각하면 된다. 이경우엔 리눅스 커널 개발자가 알아서 해줄지도 모른다 :)
+
+3. F: 강제로 로드된 모듈에서 결국 문제가 발생되어버렸다 라는 뜻으로, insmod 나 modprobe 의 -f 옵션으로
+  강제 로드된 모듈에서 버전 정보등의 검사를 하는 도중 커널에 문제를 일으켰다는 내용으로 보면 된다.
+
+4. R: 커널이 운영되고 있는 중에, 그리고 사용중인 모듈인데 강제로 (rmmod -f 옵션) Unload 시켰을때
+  발생하는 플래그이다.. 결국 뻘짓거리 하지말고 정상적으로 사용하라는 것...
+
+5. S: SMP 커널을 사용할때 CPU 할당 관련 문제시 발생하는 플래그이다.
+
+6. M : MCE ( Machine Check Exception ) 에서 일으키는 문제에 대한 플래그로, CPU 온도가 높다던가,
+  메모리 뱅크 및 슬롯이 잘못됬을때 하드웨어에서 감지하고 일으키는 문제에 대한 플래그.
+
+7. B: Bad Page State 를 뜻하는 것으로, 리눅스가상메모리(virtual memory) 에서 잘못된 부분을 감지했을때
+  사용되는 플래그이다. 보통 RAM 또는 메모리 캐쉬의 문제시 발생되곤 한단다..

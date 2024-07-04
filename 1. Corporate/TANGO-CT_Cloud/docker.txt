@@ -1,0 +1,39 @@
+docker 명령어 정리
+
+1. docker container
+    - docker run
+        pull (이미지가 없을 때) -> create -> start -> attach (-i -t 옵션 사용 시)
+    - docker pull
+        pull (이미지가 없을 때) -> create
+
+2. docker container에 접속하고나서 나올 때
+    - exit, Ctrl+D
+        : docker container 종료 후 나가기
+    - Ctrl+P, Q
+        : docker container 종료하지 않고 나가기
+
+3. docker ps
+    : 정지되지 않은 컨테이너만 출력
+    docker ps -a
+        : 정지된 컨테이너까지 모든 컨테이너 출력
+
+4. docker rm
+    : 컨테이너 삭제, 복구 불가
+    실행 중인 컨테이너 삭제
+        : docker stop 후, docker rm 실행
+    
+5. docker container 모두 삭제
+    docker container prune
+
+6. docker container 내부의 셸 사용 시
+    docker exec -i -t [ContainerName] /bin/bash
+    : attach와 다른 점, 
+    attach는 이미지 내부에서 shell 실행
+    exec는 컨테이너 내부에서 shell 실행
+
+
+
+
+** docker registry 확인
+curl -XGET xx.xx.xxx.xx:5000/v2/_catalog
+

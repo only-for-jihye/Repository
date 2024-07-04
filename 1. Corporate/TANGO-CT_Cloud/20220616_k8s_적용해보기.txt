@@ -1,0 +1,85 @@
+# 2022.06.16 k8s 적용해보기
+
+1. 접속하기 
+    tg-s-a-emsgs1 tangosvc 계정 접속
+    cd /home/tangosvc/deploy-work/kube-files/tango-o-oc
+    - git에는 별도로 저장하지 않음, 서버에서만 테스트
+
+2. namespace 생성
+    vi oc_namespace_js.yaml
+    #{
+        apiVersion: v1
+        kind: namespace
+        metadata:
+            name: ns-tgo-oc
+    #}
+    kubectl apply -f oc_namespace_js.yaml
+
+    kubectl get namespaces |grep oc
+
+3. configmap 생성
+    vi oc_configmap_js.sh
+    #{
+        kubectl create configmap adaptor-5g-ss-ran-pm-config --from-file=./adpator-config -n=ns-tgo-oc
+    #}
+    ./oc_configmap_js.sh
+
+    kubectl get configmaps -n ns-tgo-oc
+    kubectl describe configmaps -n ns-tgo-oc
+
+4. storageclass, pvc, pv는 나중에 ...
+
+5. service 추가 .. 아래에 
+
+6. serviceAccount 추가
+    vi oc_sa_js.yaml
+
+    kubectl apply -f oc_sa_js.yaml
+
+7. headless service 추가
+    vi oc_service_adaptor_js.yaml
+
+    kubectl apply -f oc_service_adaptor_js.yaml
+
+    kubectl get service -n ns-tgo-oc
+
+5. StatefulSet adaptor 기동해보기
+    vi tgo-oc-adaptor-5g-ss-ran-pm.yaml
+
+    kubectl apply -f tgo-oc-adaptor-5g-ss-ran-pm.yaml
+
+    kubectl get pods -n ns-tgo-oc
+        -> READY : 0/1
+        -> STATUS : Init:ImagePullBackOff
+        => kubectl logs adaptor-5g-ss-ran-pm-0 -n ns-tgo-oc 로 POD LOG를 조회하고 싶지만.. 
+            pod가 아직 Creation이 되지 않았기 때문에 로그가 없음
+            따라서 아래와 같이 확인함
+        -> kubectl describe pod adaptor-5g-ss-ran-pm-0 -n ns-tgo-oc
+    pod 삭제 시
+        kubectl delete -f tgo-oc-adaptor-5g-ss-ran-pm.yaml
+
+6. pod 로그 보기
+    kubectl -n ns-tgo-oc logs -p oc-adaptor-5g-ss-ran-pm-0
+
+    badrequest가 뜰 때,
+    kubectl logs --namespace=ns-tgo-oc -p oc-adaptor-5g-ss-ran-pm-0 --previous=false
+
+    동작중인 pod에 들어가서 확인하기
+    kubectl exec --stdin --tty oc-adaptor-5g-ss-ran-pm-0 -n ns-tgo-oc -- /bin/bash
+
+0. docker image 옮기기
+    docker image가 저장된 서버에서
+        docker save tango-o-oc-test > tango-o-oc-test.tar
+        scp 전송
+    tar 파일 받은 서버에서
+        docker load < tango-o-oc-test.tar
+        docker images
+    ***푸쉬 방법은 다음과 같음
+        docker build --tag tango-o-oc-test:0.1 .
+        docker tag tango-o-oc-test:0.1 90.980.227.21:5000/tango-o-oc-test:0.1
+        docker push 90.90.227.21:5000/tango-o-oc-test:0.1
+    ** 받고자 하는 서버 master
+        docker pull 90.90.227.21:5000/tango-o-oc-test:0.1
+
+    ** docker pull - connection refused 시,
+        docker start registry

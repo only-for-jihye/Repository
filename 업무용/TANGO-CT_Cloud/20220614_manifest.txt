@@ -1,5 +1,0 @@
-# 20220614
-# manifest 파일 만들기
-# namespace ~ configmap ~ pod
-# helm
-

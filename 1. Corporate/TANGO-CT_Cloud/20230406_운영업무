@@ -1,0 +1,73 @@
+# 2023.04.06 운영업무
+
+1. 운영업무? 일일점검, VOC 
+    - RM 관리
+        예방, 대응, 후속조치(나중에 발생하지 않도록.. 보완)
+    * 사전 센싱
+        - 고객사가 먼저 알기 전에 우리가 탐지하는 것
+    - 유지보수
+
+ * 용어
+    PI : 성능지표 (Performance Indicator)
+        * rawDataFile -> *.csv
+            , , , , 데이터 -> DB record 
+            통신장비 성능 지표 
+        * PI 이슈 (미수집)
+            1. OC 이슈 -> OC 프로세스 X, RAW DATA FILE X
+            2. 장비정보
+                IM_EQP_BAS (인벤토리) -> FM/PM OM_EQP_BAS (PM은 EQP_OP_ALS_NM)
+            3. 성능 내부이슈
+
+    KPI : 핵심 성능지표 (Performance Indicator)
+        * SMS.csv
+            분당A,1,2,3,4,5
+        * ALARM.csv
+            분당A,3,4,5,6,7
+        * KPI - SMS,ALARM
+            SMS - 분당A,1,2
+            ALARM - 분당A,3,4
+            SMS,ALAM-KPI - 분당A,1,2,3,4,13
+    
+    DRIVER, GRID, TOPIC
+    OM (Operation Monitoring) -> 운용감시
+    OS (Operation Statistics) -> 운용통계
+
+    PM DataType
+        - OM_PERF_PROC_LOG
+            일자, PIxxxxx   14232
+            일자, KPIxxxxx
+        - OM(PM) : 1MIN/5MIN/15MIN
+        - OS(PS) : 60MIN
+
+    RULE - PARSING RULE
+    PM (Performance Monitoring) -> 성능감시
+    PS (Performance Statistics) -> 성능통계
+    
+    KAFKA : 분산 메시징 처리 시스템
+        TOPIC : 메시지를 특정 저장소를 만들어서 저장하는 곳
+        
+    Procer -> Kafka -> Consuer
+    PatitionKey : -1 Round Robin이다...
+    데이터의 순서가 중요하면, partitionkey를 지정해라
+
+2. 전반적인 TANGO 데이터 흐름도
+    - OC ~ PM
+
+EMS(장비)           -> OCgateway,ltefep(데이터를 저장) <- OC Adaptor -> Parser ~ NBI ->  Kafka    ///
+RAN-EMS, CN-EMS 등
+tg-p-ocpar-001 ~ 26, 501 ~ 506
+Parsing Rule
+    - PKG
+        PKG가 업데이트될 때
+            칼럼
+
+3. 데이터 처리 Flow
+    - OC Adap
+        json, binarytor ~ Kafka
+    - 타 팀과의 협업 (인벤토리, 고장관리 등)
+        txt, csv
+
+4. 운영업무를 경험하면서의 좋은점/힘든점
+    - 운영업무 경험을 통해 개발업무를 하면 좋은 점
+    - 협업에 대해 배울 수 있음
+

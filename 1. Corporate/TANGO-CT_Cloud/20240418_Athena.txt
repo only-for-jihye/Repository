@@ -1,0 +1,10 @@
+# 2024.04.18 Athena 인수인계
+
+Athena prepared-statement full error
+    -> 내부 위키 문서 찾아보기 
+
+AWS Athena 권한 부여 필요
+    -> Project leader 권한??? (하부장님)
+
+
+

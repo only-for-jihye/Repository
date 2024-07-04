@@ -1,0 +1,37 @@
+클라우드 환경 구성하기
+
+1. Docker image base.repo 설정
+
+2. 각 서버 용도에 맞는 Docker image 생성
+    - adaptor
+        1. centos 설치
+            FROM    IP:PORT/centos:7.6.1810
+        2. 필요한 패키지 설치
+            RUN     rm -f /etc/yum.repos.d/*
+            COPY    base.repo   /etc/yum.repos.d/~base.repo
+            RUN     yum install -y [PKG LIST] && yum -y clean all
+        3. Time 설정
+            RUN     ln -sf /usr/share/zoneinfo/Asia/Seoul   /etc/localtime
+        4. 사용자 계정 및 디렉토리 생성
+            RUN     groupadd -g 000 groupName && useradd -m -u 000 -g groupName userName
+            RUN     mkdir -p /TANGOOC/adaptor
+            RUN     chown userName:groupName /TANGOOC/adaptor
+        5. 사용자 계정 설정
+            USER    userName
+            RUN     cd ~userName; ln -s /dirName dirName
+        6. Python PKG COPY
+            ADD     --chown
+            ..
+        7. Source COPY
+            ...
+        8. 외부 파일 시스템 연결
+            ...
+        9. 환경변수 설정
+            ...
+        10. 실행 디렉토리 설정
+            ...
+        11. 실행
+            ...       
+    - sbi
+    - parser
+    - router

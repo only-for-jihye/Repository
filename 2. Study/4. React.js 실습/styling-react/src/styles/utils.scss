@@ -1,0 +1,17 @@
+@import '~open-color/open-color';
+@import '~include-media/dist/include-media';
+
+$breakpoints: ( /* 추후 반응형 디자인을 위한 코드를 작성할 때의 기준점 */
+    small: 376px,
+    medium: 768px,
+    large: 1024px,
+    huge: 1200px
+);
+
+$size: 100px;
+
+@mixin place-at-center() {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
