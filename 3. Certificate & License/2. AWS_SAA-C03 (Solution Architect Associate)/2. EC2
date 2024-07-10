@@ -31,6 +31,7 @@
                 Anything you can thing of ..
             The EC2 User Data Script runs with the root user (sudo ~)
 
+
 3. EC2 Instance Types - Overview
     You can use different types of EC2 instances that are optimised for different use cases (https://aws.amazon.com/ec2/instance-types)
     AWS has the following naming convention :

@@ -155,8 +155,8 @@ VPC - Virtual Private Cloud
         Cost                    Per hour & amount of data transferred                   Per hour, EC2 instance type and size, + network $
         Public  IPv4            O                                                       O
         Private IPv4            O                                                       O
-        Security Groups         O                                                       O
-        Use as Bastion Host ?   O                                                       O
+        Security Groups         X (NACL)                                                O  (EC2 Instance이기 때문)
+        Use as Bastion Host ?   X                                                       O
 
 
 9. Security Groups & NACLs 

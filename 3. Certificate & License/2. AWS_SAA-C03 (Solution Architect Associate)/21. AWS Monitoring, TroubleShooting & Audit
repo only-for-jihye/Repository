@@ -212,7 +212,7 @@
 
 
 4. AWS CloudTrail 
-    Provides governance, compliance and audit for your AWS Account 
+    Provides governance, compliance and audit for your AWS Account (AWS 계정 추적)
     CloudTrail is enabled by default 
     Get an history of events / API calls made within your AWS Account by :
         Console 
@@ -270,7 +270,7 @@
 
 
 6. AWS Config 
-    Helps with auditing and recording compliance of your AWS resources 
+    Helps with auditing and recording compliance of your AWS resources (AWS Resource 추적)
     Helps record configurations and changes over time 
     Questions that can be solved by AWS Config :
         IS there unrestricted SSH access to my security groups ?
@@ -280,6 +280,7 @@
     AWS Config is a per-region service 
     Can be aggregated across regions and accounts 
     Possibility of storing the configuration data into S3 (analyzed by Athena)
+        -> Region 종속적이지만 S3를 통해 Cross-region, Cross-account 가능
     
     Config Rules 
         Can use AWS managed config rules (over 75)
@@ -297,7 +298,7 @@
         View configuration of a resource over time 
         View CloudTrail API calls of a resource over time 
     
-    Config Rules - Remediations 
+    Config Rules - Remediations (복원)
         Automate remediation of non-compliant resources using SSM Automation Documents 
         Use AWS-Managed Automation Documents or create custom Automation Documents
             Tip : you can create custom Automation Documents that invokes Lambda function

@@ -13,7 +13,7 @@
                     <--authenticate-->  Amazon Cognito  <--Verify authentication-->  Amazon API Gateway 
     
     giving users access to S3 
-        Mobile client  <--authenticate-->  Amazon Cognito  <--Generate temp-->  Amazon STS
+        Mobile client  <--authenticate-->  Amazon Cognito  <--Generate temp-->  Amazon STS (Security Token Service)
                                                               credentials
                         <--Store/retrieve files-->  Amazon S3 
                             Permissions 
