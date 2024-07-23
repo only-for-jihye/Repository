@@ -287,7 +287,7 @@
             Big File -> Divide In parts -> Parallel uploads -> Amazon S3 
         S3 transfer Acceleration
             Increase transfer speed by transferring file to an AWS edge location which will forward the data to the S3 bucket in the target region 
-            Cmplatible with multi-part upload 
+            Complatible with multi-part upload 
             File in USA -> Fast (public www) -> Edge Location (USA) -> Fast (private AWS) -> S3 Bucket Australia 
         S3 Byte-Range Fetches 
             1. Parallelize GETs by requesting specific byte ranges 
