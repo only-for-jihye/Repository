@@ -1,3 +1,0 @@
-([('split_excel',
-   '/Users/wonjongsoo/study/Repository/6. Part-time-job/dist/split_excel',
-   'EXECUTABLE')],)
