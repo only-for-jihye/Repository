@@ -18,19 +18,19 @@ def search_keyword_index_from_df(df_header, keyword):
     # print(int(matching_indices[0]))
     return int(matching_indices[0])
 
-def separate_region():
+def separate_region(org_header, org_value, region_header, region_value):
     """
     # 1. 원본 파일의 엑셀 파일을 배열로 읽는다.
     # 2. 배열 내 우편번호 코드를 찾아 수도권or수도권외곽or지방 구분하고 추가배송비 여부를 확인한다. -> 각 배열 마지막에 추가
     """
-    org_header, org_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '20241125_주문서취합 개발요청서.xlsx'))
-    std_region_header, std_region_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '수도권_지방_등_구분_기준파일.xlsx'))
+    # org_header, org_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '20241125_주문서취합 개발요청서.xlsx'))
+    # std_region_header, std_region_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '수도권_지방_등_구분_기준파일.xlsx'))
     postcode = search_keyword_index_from_df(org_header, "우편번호")
-    regioncode = search_keyword_index_from_df(std_region_header, "우편번호")
+    regioncode = search_keyword_index_from_df(region_header, "우편번호")
     for row in org_value:
         # print(row)
         matched = False 
-        for std in std_region_value:
+        for std in region_value:
             # print(row[postcode])
             # print(std[regioncode])
             if row[postcode] == std[regioncode]:
@@ -43,16 +43,16 @@ def separate_region():
     org_header.append("배송지역구분")
     org_header.append("추가배송비")
     # print(org_value)
-    # return org_header, org_value
-    calc_fee(org_header, org_value)
+    return org_header, org_value
+    # calc_fee(org_header, org_value)
 
 
-def calc_fee(org_header, org_value):
+def calc_fee(org_header, org_value, std_fee_header, std_fee_value):
     """
     # 3. 원본 상품코드와 배송비기준파일의 상품코드를 매칭한다.
     # 4. 수도건, 수도권외곽, 지방, 추가배송비 등을 매칭해야 한다.
     """
-    std_fee_header, std_fee_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '배송비기준파일.xlsx'))
+    # std_fee_header, std_fee_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '배송비기준파일.xlsx'))
     org_productcode = search_keyword_index_from_df(org_header, "상품코드")
     std_productcode = search_keyword_index_from_df(std_fee_header, "상품코드")
 
@@ -65,9 +65,12 @@ def calc_fee(org_header, org_value):
     for row in org_value:
         matched = False
         # 2. 기준 데이터를 모두 가져와서 한줄씩 비교한다.
+        # print(row)
         for std_row in std_fee_value:
             # 3. 상품코드 매칭
+            # print(std_row)
             if row[org_productcode] == std_row[std_productcode]:
+                # print(row[org_productcode] + " : " + std_row[std_productcode])
                 # 4. 배송지역구분 값 찾아서 기준 데이터의 칼럼 인덱스 찾기
                 aa = std_row[search_keyword_index_from_df(std_fee_header, row[delivery_region_standard])]
                 # 5. 추가 배송비 칼럼 읽기
@@ -75,22 +78,38 @@ def calc_fee(org_header, org_value):
                 # 6. 추가 배송비 컬럼에 O라고 체크되어 있을 경우, 추가배송비 합산
                 if (bb.upper() == "O" or bb == "0"):
                     cc = std_row[std_add_fee]
-                    row.append(aa+cc)
-                    matched = True 
-                    break
+                else :
+                    cc = 0
+                row.append(aa+cc)
+                matched = True 
+                break
         if not matched:
             row.append("No matched 상품코드")    
-    print(org_value)
-    # return org_value
-    make_excel_file(org_header, org_value)
+    # print(org_value)
+    return org_value
+    # make_excel_file(org_header, org_value)
 
 def make_excel_file(org_header, org_value):
-    print(org_header)
-    print(len(org_value[0]))
-    print(len(org_header))
+    # print(org_header)
+    # print(len(org_value[0]))
+    # print(len(org_header))
     df = pd.DataFrame(org_value, columns=org_header)
-    file_path = os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', 'test.xlsx')
+    # file_path = os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', 'test.xlsx')
+    # file_path = os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', 'test.xlsx')
+    file_path = 'C:/Users/샘플/Desktop/test/test.xlsx'
     df.to_excel(file_path, index=False)
+
+
+def excel_processing_exec(org_file_path, region_file_path, fee_file_path):
+    org_file_header, org_file_value = read_excel(org_file_path)
+    region_file_header, region_file_value = read_excel(region_file_path)
+    fee_file_header, fee_file_value = read_excel(fee_file_path)
+
+    org_header, org_value = separate_region(org_header=org_file_header, org_value=org_file_value, region_header=region_file_header, region_value=region_file_value)
+
+    value_to_excel = calc_fee(org_header, org_value, std_fee_header=fee_file_header, std_fee_value=fee_file_value)
+
+    make_excel_file(org_header, value_to_excel)
 
 if __name__ == '__main__':
     # org_header, org_value = read_excel(os.path.join('/', 'Users', 'wonjongsoo', 'Downloads', '20241125_주문서취합 개발요청서.xlsx'))

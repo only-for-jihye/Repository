@@ -57,16 +57,24 @@ class MainUI(QMainWindow):
         return std2_file_name
 
     def execute(self):
-        excel_processing.separate_region()
+        # print(self.org_select_file)
+        # print(self.std_select_file)
+        # print(self.std2_select_file)
+        # excel_processing.excel_processing_exec(self.org_select_file, self.std_select_file, self.std2_select_file)
+        excel_processing.excel_processing_exec(
+            'C:/Users/샘플/Desktop/test/원본.xlsx'
+            , 'C:/Users/샘플/Desktop/test/지역.xlsx'
+            , 'C:/Users/샘플/Desktop/test/배송비.xlsx'
+        )
 
 if __name__ == "__main__":
     # C:\Users\샘플\AppData\Local\Programs\Python\Python312\Lib\site-packages\PyQt5\Qt5\plugins
     # C:\Users\샘플\AppData\Local\Programs\Python\Python312\Lib\site-packages\PyQt5\Qt\plugins\platforms
-    # if sys.platform == "win32":
-    #     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(
-    #         os.path.dirname(sys.executable), "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
-    #         # "C:","Users","샘플","AppData","Local","Programs","Python","Python312", "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
-    #     )
+    if sys.platform == "win32":
+        os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(
+            os.path.dirname(sys.executable), "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
+            # "C:","Users","샘플","AppData","Local","Programs","Python","Python312", "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
+        )
     app = QApplication([])
     window = MainUI()
     window.show()
