@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtGui import QPixmap
 import os
 import sys
 import excel_processing
@@ -135,7 +136,14 @@ class MainUI(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("SEUSEUDI Tool App")
-        self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(150, 100, 300, 400)
+
+        # QLabel에 스스디 이미지 추가
+        self.label = QLabel(self)
+        self.label.setGeometry(75, 10, 165, 42)  # 위치와 크기 설정
+        pixmap = QPixmap("2sd.png")  # 이미지 파일 경로
+        self.label.setPixmap(pixmap)
+        self.label.setScaledContents(True)  # 이미지 크기를 QLabel 크기에 맞게 조정
 
         # 초기 화면 레이아웃
         self.central_widget = QWidget()
