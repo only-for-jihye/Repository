@@ -191,11 +191,11 @@ class MainUI(QMainWindow):
 if __name__ == "__main__":
     # C:\Users\샘플\AppData\Local\Programs\Python\Python312\Lib\site-packages\PyQt5\Qt5\plugins
     # C:\Users\샘플\AppData\Local\Programs\Python\Python312\Lib\site-packages\PyQt5\Qt\plugins\platforms
-    # if sys.platform == "win32":
-    #     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(
-    #         os.path.dirname(sys.executable), "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
-    #         # "C:","Users","샘플","AppData","Local","Programs","Python","Python312", "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
-    #     )
+    if sys.platform == "win32":
+        os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(
+            os.path.dirname(sys.executable), "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
+            # "C:","Users","샘플","AppData","Local","Programs","Python","Python312", "Lib", "site-packages", "PyQt5", "Qt5", "plugins", "platforms"
+        )
     # app = QApplication([])
     # window = MainUI()
     # window.show()
