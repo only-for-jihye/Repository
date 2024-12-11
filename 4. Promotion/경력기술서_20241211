@@ -1,0 +1,131 @@
+1. 오토앤(주) 이력
+① 프로젝트 명 : 오토앤(주) E-Commerce 유지보수
+② 수행 기간 : 2024.08 ~ 진행 중
+③ 개요 : 오토앤(주) 이커머스 채널 서비스 유지보수
+④ 담당 역할 : 시스템 운영/개발 관리자 (운영 및 개발 PM), DBA 업무 대행
+⑤ 보유/활용 Skill :
+- Linux (CentOS, SULinux)
+- Java, Spring Boot, MyBatis, RestAPI
+- AWS EC2, RDS for MySQL Community
+- NodeJS, VueJS, MySQL, Loki, Tempo, Prometheus, Grafana
+- 개발사 및 사내 주요 연관 부서, 외부 협력사 커뮤니케이션
+⑥ 주요 성과 :
+- VOC 및 서비스 개선 요청 건에 대한 커뮤니케이션으로 개선안 도출
+- 운영 환경 배포 후 잦은 롤백 이슈를 개선하여 시스템 배포 안정화
+- 서비스 운영 종료에 따른 주요 법령에 의거한 후속 이행 조치
+- DB 보안 강화
+- 사내 IT 업무 절차 표준화를 위한 ITSM 구축 기획
+⑦ 업무 내용 :
+- SLA 지표에 따른 계약 관리, 외주사 인력 관리
+- 서비스 장애 대응 및 개선안 도출, 개발 및 배포 리딩
+- 서비스 요청 건 (서비스데스크, VOC) 관리
+- 사내 영업부 등 연관 부서와 외주 개발사, 협력업체 커뮤니케이션 담당
+- 서비스 종료에 따른 후속 조치 계획 수립 및 이행 : 개인정보 보호법에 따른 개인정보 즉시 폐기, 전자상거래법에 따른 주문정보/CS정보 등 중요정보 5년 보관 절차 계획 수립, 연관 부서 협조 요청 등
+- 사내 솔루션 관리 : 연간 사업계획에 따른 ERP, V3, 스팸필터 등 솔루션 계약 및 관리
+- 장애 예방을 위한 시스템 배포 안정화 방안 수립 : 시스템 배포 절차 강화(절차 개선 및 리뷰 증적 도입) 및 개발계 미구축 시스템에 대한 신규 구축, CI/CD PIPELINE 도입으로 배포 자동화 구축
+- ISO-20000, ITIL을 기준으로 ITSM의 Best Practice를 벤치마킹하여 사내 ITSM 시스템 개발 기획 (2025년 1월 확정)
+- 보안성 검토에 따른 시스템 아키텍처 구성 및 개선 검토
+- 개발 및 운영 주요 산출물 관리 : 기획안, WBS, 요구사항 수집, 기능명세, 예산 측정(FP 도출), IA, 화면설계, 기능흐름도, DB 설계서, 용어사전, I/F 설계서, API 명세서, 사용자/운영자 매뉴얼
+- DB 계정 생성/삭제 및 권한 관리, 운영/개발 권한 부여 검토 및 이력 관리 등 보안성 강화, 서비스/사용자 계정 분리
+- SlowQuery 개선 : 월간 SlowQuery 추출 및 개선 활동 (Query 튜닝, Index 생성 등)
+- ISMS 대응 : 접속제어 솔루션 및 MFA 도입, 개인정보 암호화 방안 등 검토
+
+2. (주)아이비컴텍 프로젝트 이력
+① 프로젝트 명 : SKT TANGO Data 수집부 구조개선
+② 발주처/고객사 : SK C&C / SKTelecom
+③ 수행 기간 : 2023.07 ~ 2023.12
+④ 개요 : 데이터 파이프라인에서 처리되는 Raw Data 모니터링 시스템 개발
+⑤ 담당 역할 : 개발사 프로젝트 매니저 및 백엔드 개발자
+⑥ 보유/활용 Skill :
+- Linux (CentOS, Amazon Linux)
+- Python, Java, Spring Boot, MyBatis, RestAPI
+- AWS EKS, Amazon MSK, RDS Aurora MySQL
+⑦ 주요 성과 :
+- Waterfall 개발 방식에 따라 WBS 작성 및 프로젝트 모든 단계에 참여
+- Raw Data 이슈 발생 시, 이벤트를 생성하여 SMS로 전송하여 이슈 사항에 대한 사전 센싱 역할
+- Raw Data 이벤트 이력 관리 효율화
+- 대시보드 화면 제공으로 Data 모니터링 업무 효율화
+- 모니터링 시스템 개발 추가 사업 제안 (’24년, ‘25년)
+⑧ 업무 내용
+프로젝트 매니저 역할 :
+- 사업제안 : 사업 배경, 사업 내용, 현황, 공수산정, 기대효과, 일정 수립
+- 요구사항 정의 : 현장 VOC 수집을 위한 회의 개최
+- User Interface 설계 : 기존 모니터링 시스템 및 공통 UI 규격에 맞춘 설계 (대시보드 및 팝업 형태)
+- 아키텍처 설계 : AWS Public Cloud 설계
+- 프로그램 목록 작성
+- 데이터베이스 모델링 : 테이블 설계 및 ER-D 작성
+- 테스트 : 시나리오 케이스 작성 및 시현
+- 사용자/운영자 매뉴얼 및 장애상황 시나리오 대응 매뉴얼 작성
+- 산출물 작성 및 관리 : 요구사항 정의서, UI 설계서, 아키텍처 정의서, 프로그램 목록, DB 설계서, 시나리오 케이스, 기능 테스트 증적, 사용자/운영자 매뉴얼, 장애상황 대응 시나리오
+백엔드 개발자 역할 :
+- Python의 Confluent-Kafka 라이브러리를 사용, Raw Data 파일 정보를 Amazon MSK로 전송하는 기능 개발 (Producer)
+- 기존 기능에 영향을 주지 않도록 Side-car 패턴으로 별도의 Container 구성하여 개발
+- Java의 Spring Kafka Listener 중 AcknowlegingMessageListener Interface를 사용하여 Kafka Listener 구성, 병렬 처리로 데이터를 Consume하는 기능 개발
+- Consume한 Kafka Message는 RDS Aurora MySQL Writer Instance에 Insert하는 기능 개발
+- 각 주기별로 동작해야 하는 기능을 정리하여 개별 RestAPI로 개발, API 호출은 Cronjob으로 개발
+- Table에 저장되는 파일 정보를 기준 시간별로 1분마다 집계하여 집계 테이블에 저장하는 API
+- 5분/15분/60분마다 수집되는 주기별 데이터에 대해 임계치와 비교하여 이상 감지 시, 이벤트를 생성하는 API
+- 장비 정보의 철거/미사용 상태코드 수정 시, 생성된 이벤트를 Clear하는 API
+- 발생된 이벤트를 운영자에게 SMS/MMS로 전송하는 API
+
+3. (주)아이비컴텍 프로젝트 이력
+① 프로젝트 명 : SKT TANGO 클라우드 전환 사업
+② 발주처/고객사 : SK C&C / SKTelecom
+③ 수행 기간 : 2022.03 ~ 2024.08 (2023년 말, 대부분 전환 완료되어 On-Premise F/O 대기중, SM 업무로 전환)
+④ 개요 : On-Premise의 Infrastructure, Application을 AWS Public Cloud로 이전하는 사업
+⑤ 담당 역할 : 백엔드 개발자 및 클라우드 엔지니어
+⑥ 보유/활용 Skill :
+- Linux (CentOS, Amazon Linux)
+- Python, Java, Spring Boot, MyBatis, RestAPI
+- Docker, Kubernetes, HelmChart
+- Amazon EKS, Amazon MSK, RDS Aurora MySQL, AWS Storage(EBS, EFS, S3), AWS LoadBalancer
+- CI/CD (CodeCommit, CodeBuild, ArgoCD, ECR, Parameter Store)
+⑦ 주요 성과 :
+- 데이터 수집량에 따른 Auto Scaling 동작으로 Application에 유연성과 확장성 제공
+- Auto Scaling 및 Container의 각 Resource 설정에 따라 비용 최적화 모델 구현
+- Serverless로 온프레미스 서버 유지 비용 절감
+- CI/CD 구현을 통한 DevOps 환경으로의 변화
+- Probe를 사용한 Application 모니터링 및 AWS managed Service/Resource로 운영 효율화
+⑧ 업무 내용
+- Cloud Native를 위해 Application Modernization 설계 및 개발 (Confluence gliffy Diagram 사용)
+- CI/CD 설계 구현 (CodeCommit, CodeBuild, ArgoCD, ECR, Parameter Store)
+- Container 보안 및 비용 절감을 위한 Pod toleration 설정 및 Container Resource 개별 추적/관리
+- 내/외부 데이터 제공을 위한 S3 Bucket 데이터 저장 기능 개발 (Python boto3)
+- RDS Aurora MySQL Instance 관리 (SlowQuery)
+- On-Premise Kafka를 Amazon MSK로 Migration
+- Application 자동 모니터링을 위한 Livenessprobe 스크립트 개발
+- 프로젝트 일정 관리를 위한 Jira/Confluence 사용 및 XWiki 사용으로 지식/업무 공유
+- 일정 기간 사용하지 않은 StatefulSet Pod는 initContainer 상태에서 정지할 수 있도록 initContainer 로직 개발
+
+4. (주)아이비컴텍 프로젝트 이력
+① 프로젝트 명 : SKT 차세대 OSS 분석/설계/구축 (TANGO : T-Advanced Next Generation OSS)
+② 발주처/고객사 : SK C&C / SKTelecom
+③ 수행 기간 : 2018.10 ~ 2024.08 (SKT TANGO 클라우드 전환 사업이 SM 업무로 전환되면서 동시 운영)
+④ 개요 : Eng.-구축-운용에 걸쳐 세분화된 Network Tool들을 통합, 데이터를 분석하여 통합 감시/제어하는 차세대 네트워크 Management 환경 제공
+⑤ 담당 역할 : 데이터 파이프라인 운영자 및 백엔드 개발자
+⑥ 보유/활용 Skill :
+- Linux (CentOS)
+- Python, Java, Spring, MyBatis, RestAPI, Oracle
+- Amazon EKS, Amazon MSK, RDS Aurora MySQL, AWS Storage(EBS, EFS, S3), AWS LoadBalancer
+- CI/CD (CodeCommit, CodeBuild, ArgoCD, ECR, Parameter Store)
+- HA - DRBD, Pacemaker
+⑦ 주요 성과 :
+- 24/7 운영 이슈 발생 시 대응으로 수집관리팀 고객사로부터 신뢰성 확보
+- 데이터 수집 안전성 및 서비스 지속성 확보 (이슈 발생 : 월 평균 1건 이상 → 연 평균 1~2건)
+- 데이터 이슈 사항 발생 시, 이력 관리 및 분석을 통한 대응 방안 매뉴얼화
+- 신규 연동 규격 제안 및 수집되는 장비의 모듈별 수집 서버 분리로 서버 안전성 확보
+⑧ 업무 내용
+- 수집관리 데이터 파이프라인 운영 및 관리 (수집 데이터의 양은 일평균 20TB 이상)
+- 데이터 연동을 위한 내/외부 인터페이스 관리 (FEP, Gateway, RestAPI, Kafka, ETL, Protocol, 수집 계정 패스워드 만료 관리 등)
+- 수용 장비 및 프로세스 문서화 관리
+- 운영업무 매뉴얼 정기 업데이트 및 연동 규격서 관리
+- 다양한 Raw Data Format에 대한 분석 (JSON, CSV, XML, TXT 등)
+- 내/외부 이해관계자 커뮤니케이션 관리
+- Infrastructure/Application 장애 대응 및 개선점 도출 (네트워크 보안 관리, OS 커널 버그 등)
+- 운영/개발 실적 관리
+- 베어메탈 서버 HA 구축 및 관리 (DRBD, Pacemaker, VIP)
+- 작업 및 배포 내역 이력 관리
+- VOC 유선 연락처/이메일 관리 및 대응
+- 프로젝트 산출물 관리 (전반기/하반기)
+- 주요 Application Source 보완/개선 (Python, Java, Spring)
+- 프로젝트 관리를 위한 Confluence 및 XWiki 사용
