@@ -6,7 +6,8 @@ def read_excel(file_path):
     엑셀 파일을 읽어 DataFrame으로 만드는 함수
     """
     df = pd.read_excel(file_path) # default로 첫번째 시트를 읽음
-    # df = pd.read_excel(file_path, sheet_name="") # 시트이름 지정 필요 시 사용
+    # df = pd.read_excel(file_path, sheet_name=None) # 전체 시트를 불러옴, 시트 이름이 key가 되고 나머지가 value인 dataframe이 됨
+    # df = pd.read_excel(file_path, sheet_name="sheetName") # 시트이름 지정 필요 시 사용
     df_header = df.columns.tolist()
     df_value = df.values.tolist()
     # print(df)

@@ -1,0 +1,52 @@
+def create_custom_invoice_pdf(self, dataframe):
+        try:
+            # 폰트 등록 (한글 지원을 위해)
+            pdfmetrics.registerFont(TTFont('Candara', 'Candara.ttf'))
+            # pdfmetrics.registerFont(TTFont('NanumGothic', 'C:/Windows/Fonts/나눔고딕.ttf'))
+            # pdfmetrics.registerFont(TTFont('NanumGothic', 'C:/Windows/Fonts/NanumGothic.ttf'))
+
+            # 저장 경로 선택
+            output_path = filedialog.asksaveasfilename(
+                defaultextension=".pdf",
+                filetypes=[("PDF 파일", "*.pdf")],
+                title="PDF 저장 위치 선택"
+            )
+
+            # 저장 취소 시 종료
+            if not output_path:
+                return
+
+            # PDF 캔버스 생성
+            c = canvas.Canvas(output_path, pagesize=letter)
+            width, height = letter
+
+            # 페이지 머리글 설정
+            c.setFont('Candara', 10)
+
+            # 각 행에 대해 PDF 페이지 생성
+            for index, row in dataframe.iterrows():
+                # 페이지 내용 그리기
+                y_position = height - 100  # 상단 여백 설정
+
+                # 동적으로 모든 컬럼 출력
+                for col in dataframe.columns:
+                    if pd.notna(row[col]):  # NaN 값 처리
+                        text = f"{col}: {row[col]}"
+                        c.drawString(inch, y_position, text)
+                        y_position -= 20  # 다음 라인으로 이동
+                
+                # 페이지 완료
+                c.showPage()
+
+            # PDF 저장
+            c.save()
+
+            # 저장 성공 메시지
+            messagebox.showinfo("성공", f"PDF가 {output_path}에 저장되었습니다.")
+
+            # 자동 열기 옵션 (선택적)
+            if messagebox.askyesno("PDF 열기", "생성된 PDF를 바로 열까요?"):
+                os.startfile(output_path)
+
+        except Exception as e:
+            messagebox.showerror("오류", f"PDF 생성 중 오류 발생: {str(e)}")

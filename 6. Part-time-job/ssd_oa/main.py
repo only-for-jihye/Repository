@@ -13,7 +13,8 @@ class ExcelToolApp(QMainWindow):
         self.parent_window = parent 
 
         self.setWindowTitle("SEUSEUDI Tool App - Excel")
-        self.setGeometry(100, 100, 400, 300)
+        # self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(150, 100, 300, 400)
 
         # 파일 경로 저장용 변수
         self.file_paths = {"org_file": None, "region_file": None, "fee_file": None}
@@ -137,6 +138,7 @@ class MainUI(QMainWindow):
 
         self.setWindowTitle("SEUSEUDI Tool App")
         self.setGeometry(150, 100, 300, 400)
+        # self.setGeometry(100, 100, 400, 300)
 
         # QLabel에 스스디 이미지 추가
         self.label = QLabel(self)
