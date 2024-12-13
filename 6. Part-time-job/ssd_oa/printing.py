@@ -4,11 +4,11 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageBreak
+# from reportlab.lib import colors
+# from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageBreak
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.units import cm
-
+from reportlab.pdfgen import canvas
 
 
 class InvoicePrinter:
@@ -113,7 +113,7 @@ class InvoicePrinter:
     def create_custom_invoice_pdf(self, df):
         try:
             # 폰트 등록 (한글 지원을 위해)
-            pdfmetrics.registerFont(TTFont('Malgun', 'Malgun.ttf'))  # 한글 폰트 파일 경로 설정
+            pdfmetrics.registerFont(TTFont('MalgunGothic', 'malgun.ttf'))  # 한글 폰트 파일 경로 설정
             # pdfmetrics.registerFont(TTFont('Candara', 'Candara.ttf'))
             
             # 저장 경로 선택
@@ -122,59 +122,68 @@ class InvoicePrinter:
                 filetypes=[("PDF 파일", "*.pdf")],
                 title="PDF 저장 위치 선택"
             )
-
-            page_width, page_height = landscape(A4)
-            doc = SimpleDocTemplate(
-                output_path,
-                pagesize=landscape(A4),  # 가로 방향
-            )
-            print('A')
-            # 데이터 재구성
-            pages = arrange_data(df)
-            print('B')
-            # 저장 취소 시 종료
-            if not output_path:
-                return
-
-            # PDF 캔버스 생성
-            # c = canvas.Canvas(output_path, pagesize=letter)
-            c = SimpleDocTemplate(output_path, pagesize=A4)
-
-            # width, height = letter
-
-            # 페이지당 8개의 데이터로 나누기
-            rows_per_page = 8
-            pages = [df[i:i + rows_per_page] for i in range(0, len(df), rows_per_page)]
-            print('C')
-            # print(type(pages))
-            # print(pages)
-
-            # 테이블 스타일
-            table_style = TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),  # 헤더 배경
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),      # 헤더 텍스트
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),             # 가운데 정렬
-                ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),       # 기본 글꼴
-                ('FONTSIZE', (0, 0), (-1, -1), 10),                # 글자 크기
-                ('GRID', (0, 0), (-1, -1), 0.5, colors.black)      # 테두리
-            ])
-
-            # PDF 요소 생성
-            elements = []
-            for page_data in pages:
-                print(page_data)
-                table = Table(page_data, colWidths=[9 * cm] * 2, rowHeights=[2.5 * cm] * 4)
-                table.setStyle(table_style)
-                print('D')
-                elements.append(table)
-                print('E')
             
-            # 마지막 페이지에서 PageBreak 제거
-            if elements[-1] == PageBreak():
-                elements.pop()
+            # 고객명, 상품명, 주소를 하나의 문자열로 결합
+            # df_selected = df.apply(lambda row: f"{row['고객명']}\n{row['상품명']}\n{row['주소']}", axis=1).tolist()
+            df_selected = df.apply(lambda row: f"{row['우편번호']}\n{row['주소1']}\n{row['주소2']}", axis=1).tolist()
+            # print(df_selected)
+            # 데이터 배열로 변환
+            data_array = [[item] for item in df_selected]
+            
+            # 페이지 크기 설정 (A4)
+            page_width, page_height = A4
+
+            # 좌우/위/아래 간격
+            margin = 1 * cm
+
+            # 셀 크기 계산
+            cell_width = (page_width - 2 * margin) / 2  # 2열
+            cell_height = (page_height - 2 * margin) / 4  # 4행
 
             # PDF 생성
-            c.build(elements)
+            c = canvas.Canvas(output_path, pagesize=A4)
+            c.setFont("MalgunGothic", 10)
+
+            # 표 시작 위치 (좌측 상단 기준)
+            start_x = margin
+            start_y = page_height - margin
+
+            # 데이터 입력 순서 (4행 2열)
+            num_columns = 2
+            num_rows = 4
+
+            current_page = 1  # 페이지 번호
+
+            for i, value in enumerate(data_array):
+                col = i % num_columns  # 현재 열 번호
+                row = (i // num_columns) % num_rows  # 현재 페이지 내의 행 번호
+
+                # 새 페이지로 넘어가는 조건
+                if i > 0 and i % (num_columns * num_rows) == 0:
+                    c.showPage()  # 페이지 저장
+                    c.setFont("MalgunGothic", 10)  # 폰트 재설정
+                    current_page += 1
+
+                # 셀 좌표 계산
+                x = start_x + col * cell_width
+                y = start_y - (row + 1) * cell_height
+
+                # 데이터 작성 (셀 내 텍스트 왼쪽 상단 정렬)
+                lines = str(value).split("\n")
+                total_lines = len(lines)
+                max_font_size = 10
+                font_size_decrement = (max_font_size - 6) / max(1, total_lines - 1)  # Calculate font decrement dynamically
+
+                for idx, line in enumerate(lines):
+                    font_size = max(max_font_size - (font_size_decrement * idx), 6)  # Apply calculated font size
+                    c.setFont("MalgunGothic", font_size)
+                    c.drawString(x + 0.2 * cm, y + cell_height - (0.5 + idx) * cm, line)
+
+                # 셀 테두리 그리기
+                c.rect(x, y, cell_width, cell_height)
+
+            # PDF 저장
+            c.save()
 
             # 저장 성공 메시지
             messagebox.showinfo("성공", f"PDF가 {output_path}에 저장되었습니다.")
@@ -186,29 +195,8 @@ class InvoicePrinter:
         except Exception as e:
             print(e)
             messagebox.showerror("오류", f"PDF 생성 중 오류 발생: {str(e)}")
-
-def arrange_data(df, items_per_page=8):
-    """데이터를 열 기반으로 정렬 (1-5, 2-6, ...)"""
-    data = df.values.tolist()
-
-    pages = []
-    for i in range(0, len(data), items_per_page):
-        chunk = data[i:i + items_per_page]
-        # 왼쪽 열: 상위 4개, 오른쪽 열: 하위 4개
-        left_col = chunk[:len(chunk) // 2]  # 왼쪽 열
-        right_col = chunk[len(chunk) // 2:]  # 오른쪽 열
-
-        # 빈 공간 채우기
-        while len(left_col) < items_per_page // 2:
-            left_col.append(['999'])  # 빈 데이터 행
-        while len(right_col) < items_per_page // 2:
-            right_col.append(['999'])  # 빈 데이터 행
-
-        # 두 열 합치기 (각 행을 [왼쪽, 오른쪽]으로 구성)
-        page_data = [[str(left[0]), str(right[0])] for left, right in zip(left_col, right_col)]
-        pages.append(page_data)
-    # print(f"pages: {pages}")
-    return pages
+        except KeyError:
+           raise ValueError("DataFrame에 '고객명', '상품명', '주소' 컬럼이 모두 존재해야 합니다.")
 
 def main():
     root = tk.Tk()
