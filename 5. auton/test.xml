@@ -1,0 +1,20 @@
+<order>
+    <shoplinker_order_id>1211240021</shoplinker_order_id>
+    <mall_order_id><![CDATA[202412191318374837]]></mall_order_id>
+    <mall_name><![CDATA[샵바이 프리미엄]]></mall_name>
+    <baesong_status><![CDATA[신규주문]]></baesong_status>
+    ...
+    <partner_product_id>샤오토/A035186</partner_product_id>
+    ...
+</order>
+
+
+<order>
+    <shoplinker_order_id>1211240022</shoplinker_order_id>
+    <mall_order_id><![CDATA[202412191318374837]]></mall_order_id>
+    <mall_name><![CDATA[샵바이 프리미엄]]></mall_name>
+    <baesong_status><![CDATA[신규주문]]></baesong_status>
+    ...
+    <sku_match_code><![CDATA[기온쿼츠/A033466]]></sku_match_code>
+    ...
+</order> 
